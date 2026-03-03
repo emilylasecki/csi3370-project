@@ -1,6 +1,11 @@
-FROM eclipse-temurin:17-jdk-alpine
+FROM python:3.11-slim
+
 WORKDIR /app
+
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
 COPY . .
-RUN ./mvnw package -DskipTests
-EXPOSE 8080
-CMD ["java", "-jar", "target/demo-0.0.1-SNAPSHOT.jar"]
+
+EXPOSE 8000
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
