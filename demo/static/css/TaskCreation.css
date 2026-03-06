@@ -1,0 +1,81 @@
+/*
+To-Do
+- Get stuff lined up properly ;-;
+- Get icon and title lined up
+- Fix spacing
+*/
+
+
+
+*{
+    box-sizing: border-box;
+}
+
+body{
+    padding: 40px;
+}
+
+#container{
+     width: 600px;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  padding: 24px;
+}
+
+.text-entry{
+    display: flex;
+  flex-direction: column;
+  margin-bottom: 16px;
+}
+
+label {
+  font-size: 14px;
+  color: #444;
+  margin-bottom: 6px;
+}
+
+input[type="text"],
+input[type="date"],
+textarea
+select {
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+}
+
+input[type="range"] {
+  margin-top: 8px;
+}
+
+#selectors{
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  margin-bottom: 20px;
+}
+
+.box{
+    display: inline-block;
+
+}
+
+
+
+.sliders{
+  display: flex;
+  flex-direction: column;
+
+}
+
+
+.slider-box{
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    border: 1px solid #ddd;
+    border-radius: 12px;
+    width: 25%
+} 
+
+

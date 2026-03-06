@@ -37,7 +37,17 @@ templates = Jinja2Templates(directory="templates")
 def home(request: Request):
     return templates.TemplateResponse("index.html", {"request": request})
 
-# About page route
+# task creation
 @app.get("/taskcreation")
 def about(request: Request):
     return templates.TemplateResponse("TaskCreation.html", {"request": request})
+
+# group edit
+@app.get("/groupedit")
+def about(request: Request):
+    return templates.TemplateResponse("GroupEdit.html", {"request": request})
+
+# welcome page
+@app.get("/welcome")
+def about(request: Request):
+    return templates.TemplateResponse("WelcomePage.html", {"request": request})
