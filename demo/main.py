@@ -7,6 +7,10 @@ from app.task_manager import TaskManager
 from supabase import create_client
 from starlette.status import HTTP_303_SEE_OTHER
 from enviornment import SUPABASE_KEY, SUPABASE_URL
+from flask import Flask, jsonify
+from flask_cors import CORS
+import json
+from app.ai_helper import analyze_tasks
 
 # Initialize FastAPI
 app = FastAPI()
@@ -78,3 +82,19 @@ def add_task_route(
     )
 
     return RedirectResponse(url="/?success=1", status_code=HTTP_303_SEE_OTHER)
+
+def load_tasks():
+    with open("sample_tasks.json", "r") as file:
+        return json.load(file)
+    
+@app.route("/tasks", methods=["GET"])
+def get_tasks():
+    tasks = load_tasks()
+    return jsonify(tasks)
+
+
+@app.route("/analyze", methods=["GET"])
+def analyze():
+    tasks = load_tasks()
+    result = analyze_tasks(tasks)
+    return jsonify(result)
