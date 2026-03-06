@@ -1,0 +1,37 @@
+[
+  {
+    "title": "Finish math homework",
+    "category": "School",
+    "priority": "High",
+    "status": "Incomplete",
+    "due_date": "2026-03-04"
+  },
+  {
+    "title": "Go to gym",
+    "category": "Health",
+    "priority": "Medium",
+    "status": "Incomplete",
+    "due_date": "2026-03-01"
+  },
+  {
+    "title": "Buy groceries",
+    "category": "Personal",
+    "priority": "Low",
+    "status": "Complete",
+    "due_date": "2026-03-02"
+  },
+  {
+    "title": "Study for quiz",
+    "category": "School",
+    "priority": "High",
+    "status": "Incomplete",
+    "due_date": "2026-03-03"
+  },
+  {
+    "title": "Submit project update",
+    "category": "School",
+    "priority": "High",
+    "status": "Incomplete",
+    "due_date": "2026-03-02"
+  }
+]
