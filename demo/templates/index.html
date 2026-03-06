@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+    <link rel="stylesheet" href="/static/css/MainPageCSS.css">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Little Wins</title>
+</head>
+<body>
+
+    <div id="list-container"> 
+
+        <div id="message" style="display:none; background:#d4edda; padding:10px;">
+        Task created successfully!
+        </div>
+
+        <script>
+        const params = new URLSearchParams(window.location.search);
+
+        if (params.get("success") === "1") {
+            document.getElementById("message").style.display = "block";
+        }
+        </script>
+
+
+        <div id="header">
+
+            <h1> Your Wins </h1>
+
+            <div id="actions">
+                <span id="spaceSpan"> Filter </span>
+                <span> Sort <button>&#8595</button> </span>
+            </div>
+
+        </div>
+
+
+
+            <div id="tasks">
+                <img src="static/images/CheckSquare.png" id="icon">
+                <dl>  <!-- doing dl instead of ul since it comes with a description tag -->
+                    <dt> Task </dt>
+                    <dd> Task Description </dd>
+                </dl>
+            </div>
+
+        
+        
+        <hr>
+        
+        <div id="habits">
+            <img src="static/images/Award.png" id="image">
+            <dl>  <!-- doing dl instead of ul since it comes with a description tag -->
+                <dt> Habit </dt>
+                <dd> Habit Description </dd>
+            </dl>
+        </div>
+        <a href="taskcreation">
+            <button>Add</button> 
+        </a>
+
+    </div>
+
+    <div id="wrapped">
+      <img src="static/images/Present.png"> 
+      <p> Wrap it up! </p>
+    </div>
+
+
+
+</body>
+
+
+</html>
