@@ -1,0 +1,19 @@
+*{
+    box-sizing: border-box;
+}
+
+body{
+    padding: 40px;
+    width: 600px;
+    border: 1px solid #ddd;
+    border-radius: 12px;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+input{
+    width: 40%;
+}
+

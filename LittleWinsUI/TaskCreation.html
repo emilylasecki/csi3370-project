@@ -3,13 +3,72 @@
 <html>
     <head>
         <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title></title>
+        <title>New Win</title>
         <meta name="description" content="">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="">
+        <link rel="stylesheet" href="TaskCreation.css">
     </head>
     <body>
+        <div id="container">
+            <h2>New Win</h2>
+            <img src="Smile.png">
+
+            <div class="text-entry">
+                <label for="title">Title: </label>
+                <input id="title" type="text">
+            </div>
+
+            <div class="text-entry">
+                <label for="description">Description: </label>
+                <textarea id="description"> </textarea>
+            </div>
+
+            <div id="checkbox">
+                <input type="checkbox" id="habit">
+                <label for="habit">Is Habit?</label>
+            </div>
+
+            <div id="selectors">
+                <div class="box">
+                    <label for="group">Add to group:</label><br>
+                    <select id="group">
+                        <option>Groups</option>
+                    </select>
+                </div>
+
+                <div class="box">
+                    <label for="status">Status:</label><br>
+                    <select id="status">
+                        <option value="Not Started">Not Started</option>
+                        <option value="In Progress">In Progress</option>
+                        <option value="Done">Done</option>
+                    </select>
+                </div>
+
+                <div class="box">
+                    <label for="due">Due:</label><br>
+                    <input type="date" id="due">
+                </div>
+
+            </div>
+
+            <!--start another giant div-->
+            <div id="sliders">
+
+                <div class="slider-box">
+                    <label for="priority">Priority:</label>
+                    <input id="priority" type="range" min="0" max="5" value="0">
+                </div>
+          
+                <div class="slider-box">
+                    <label for="effort">Effort Estimation:</label>
+                    <input id="effort" type="range" min="0" max="5" value="0">
+                </div>
+
+            </div>
+
+
+        </div>
+
 
 
         

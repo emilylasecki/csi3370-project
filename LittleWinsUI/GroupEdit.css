@@ -1,0 +1,45 @@
+/*
+To-Do
+- Get icon and headeraligned next to each other
+*/
+
+
+*{
+    box-sizing: border-box;
+}
+
+body{
+    padding: 40px;
+}
+
+img{
+    size: 24px 24px;
+    margin-left: auto;
+}
+
+#container{
+     width: 600px;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  padding: 24px;
+}
+
+.text-entry{
+    display: flex;
+  flex-direction: column;
+  margin-bottom: 16px;
+}
+
+label {
+  font-size: 14px;
+  color: #444;
+  margin-bottom: 6px;
+}
+
+input[type="text"],
+select {
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+}
