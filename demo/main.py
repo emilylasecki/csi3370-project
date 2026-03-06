@@ -1,53 +1,81 @@
-# from fastapi import FastAPI, Request
-# from fastapi.templating import Jinja2Templates
-# from fastapi.staticfiles import StaticFiles
-
-# from fastapi import FastAPI
-# from app.controllers import router  # import your route definitions
-
-# app = FastAPI()
-
-# # Mount static files
-# from fastapi.staticfiles import StaticFiles
-# app.mount("/static", StaticFiles(directory="static"), name="static")
-
-# # Include routes from controllers.py
-# app.include_router(router)
-
-# templates = Jinja2Templates(directory="templates")
-
-# @router.get("/taskcreation")
-# def about(request: Request):
-#     return templates.TemplateResponse("TaskCreation.html", {"request": request})
-
-from fastapi import FastAPI, Request
+# main.py
+from fastapi import FastAPI, Form, Request
+from fastapi.responses import RedirectResponse
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
+from app.task_manager import TaskManager
+from supabase import create_client
+from starlette.status import HTTP_303_SEE_OTHER
+from enviornment import SUPABASE_KEY, SUPABASE_URL
 
+# Initialize FastAPI
 app = FastAPI()
 
 # Mount static files
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
-# Initialize templates (you MUST do this in every file that uses templates)
+# Initialize templates
 templates = Jinja2Templates(directory="templates")
 
-# Home page route
+# Supabase client
+supabase = create_client(SUPABASE_URL, SUPABASE_KEY)
+
+# TaskManager instance
+task_manager = TaskManager(supabase)
+
+# Home page
 @app.get("/")
 def home(request: Request):
     return templates.TemplateResponse("index.html", {"request": request})
 
-# task creation
-@app.get("/taskcreation")
-def about(request: Request):
-    return templates.TemplateResponse("TaskCreation.html", {"request": request})
-
-# group edit
 @app.get("/groupedit")
-def about(request: Request):
+def group_edit(request: Request):
     return templates.TemplateResponse("GroupEdit.html", {"request": request})
 
-# welcome page
 @app.get("/welcome")
-def about(request: Request):
+def welcome(request: Request):
     return templates.TemplateResponse("WelcomePage.html", {"request": request})
+
+# Task creation page
+@app.get("/taskcreation")
+def task_creation(request: Request):
+    groups_response = supabase.table("task_groups").select("*").execute()
+    groups = groups_response.data
+    return templates.TemplateResponse(
+        "TaskCreation.html",
+        {"request": request, "groups": groups}
+    )
+
+# Handle task submission
+@app.post("/add_task")
+def add_task_route(
+    request: Request,
+    taskName: str = Form(...),
+    description: str = Form(...),
+    dueDate: str = Form(...),
+    status: str = Form(...),
+    effort: int = Form(...),
+    priority: int = Form(...),
+    groupID: int = Form(...),
+    is_habit: bool = Form(False)
+):
+    """
+    Create a task using TaskManager and redirect back to task creation page
+    """
+
+    # Placeholder userID; replace with real session user if needed
+    userID = 1
+
+    # Map form 'groupID' to database column 'task_group_id'
+    task_manager.add_task(
+        taskName=taskName,
+        description=description,
+        dueDate=dueDate,
+        status=status,
+        effort=effort,
+        priority=priority,
+        groupID=groupID,  # <-- this is the key fix
+        userID=userID,
+    )
+
+    return RedirectResponse(url="/taskcreation", status_code=HTTP_303_SEE_OTHER)

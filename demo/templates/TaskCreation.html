@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html>
     <head>
         <meta charset="utf-8">
@@ -10,67 +9,69 @@
     <body>
         <div id="container">
             <h2>New Win</h2>
-            <img src="static/images/Smile.png">
+            <img src="/static/images/Smile.png">
 
-            <div class="text-entry">
-                <label for="title">Title: </label>
-                <input id="title" type="text">
-            </div>
+            <!-- Form starts -->
+            <form action="/add_task" method="POST">
 
-            <div class="text-entry">
-                <label for="description">Description: </label>
-                <textarea id="description"> </textarea>
-            </div>
+                <div class="text-entry">
+                    <label for="title">Title: </label>
+                    <input id="title" name="taskName" type="text" required>
+                </div>
 
-            <div id="checkbox">
-                <input type="checkbox" id="habit">
-                <label for="habit">Is Habit?</label>
-            </div>
+                <div class="text-entry">
+                    <label for="description">Description: </label>
+                    <textarea id="description" name="description" required></textarea>
+                </div>
 
-            <div id="selectors">
-                <div class="box">
-                    <label for="group">Add to group:</label><br>
-                    <select id="group">
-                        <option>Groups</option>
+                <div id="selectors">
+                    <div class="box">
+                        <label for="group">Add to group:</label><br>
+                        <select name="groupID" id="group">
+                        {% if groups %}
+                            {% for group in groups %}
+                                <option value="{{ group.task_group_id }}">{{ group.habitType }}</option>
+                            {% endfor %}
+                        {% else %}
+                            <option value="0">No Groups Available</option>
+                        {% endif %}
                     </select>
+                    </div>
+
+                    <div class="box">
+                        <label for="status">Status:</label><br>
+                        <select id="status" name="status">
+                            <option value="Not Started">Not Started</option>
+                            <option value="In Progress">In Progress</option>
+                            <option value="Done">Done</option>
+                        </select>
+                    </div>
+
+                    <div class="box">
+                        <label for="due">Due:</label><br>
+                        <input type="date" id="due" name="dueDate">
+                    </div>
                 </div>
 
-                <div class="box">
-                    <label for="status">Status:</label><br>
-                    <select id="status">
-                        <option value="Not Started">Not Started</option>
-                        <option value="In Progress">In Progress</option>
-                        <option value="Done">Done</option>
-                    </select>
+                <div id="sliders">
+                    <div class="slider-box">
+                        <label for="priority">Priority:</label>
+                        <input id="priority" type="range" min="0" max="5" value="0" name="priority">
+                    </div>
+
+                    <div class="slider-box">
+                        <label for="effort">Effort Estimation:</label>
+                        <input id="effort" type="range" min="0" max="5" value="0" name="effort">
+                    </div>
                 </div>
 
-                <div class="box">
-                    <label for="due">Due:</label><br>
-                    <input type="date" id="due">
+                <div id="submit-button">
+                    <button type="submit">Create Task</button>
                 </div>
 
-            </div>
-
-            <!--start another giant div-->
-            <div id="sliders">
-
-                <div class="slider-box">
-                    <label for="priority">Priority:</label>
-                    <input id="priority" type="range" min="0" max="5" value="0">
-                </div>
-          
-                <div class="slider-box">
-                    <label for="effort">Effort Estimation:</label>
-                    <input id="effort" type="range" min="0" max="5" value="0">
-                </div>
-
-            </div>
-
+            </form>
+            <!-- Form ends -->
 
         </div>
-
-
-
-        
     </body>
 </html>

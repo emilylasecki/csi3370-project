@@ -1,6 +1,6 @@
 class Task:
 
-    def __init__(self, taskID, taskName, description, creationDate, dueDate, status, effortEstimation, priority):
+    def __init__(self, taskID, taskName, description, creationDate, dueDate, status, effortEstimation, priority, task_group, groupID):
         self.taskID = taskID
         self.taskName = taskName
         self.description = description
@@ -9,6 +9,8 @@ class Task:
         self.status = status
         self.effortEstimation = effortEstimation
         self.priority = priority
+        self.task_group = task_group # object of type task_group
+        self.groupID = groupID # for use in database keys
 
     # getters
 
@@ -68,19 +70,17 @@ class Task:
     def request_task_info(self, taskID):
         return 0
     
-    def add_task_to_group(self, taskID, groupID):
+    def add_task_to_group(self, taskID, task_group):
         return 0
     
     def display_all_tasks(self, userID, taskID):
         return 0
     
-    def remove_task_from_group(self):
-        return 0
+    def remove_task_from_group(self): # also need to tell task group to not use
+        self.task_group = None
     
-    def add_task_to_group(self):
-        return 0
+    def add_task_to_group(self, task_group): # also need to tell task group to use
+        self.task_group = task_group
     
-    def remove_task_from_group(self):
-        return 0
     
     # helper or additional functions

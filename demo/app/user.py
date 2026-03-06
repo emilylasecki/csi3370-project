@@ -41,31 +41,31 @@ class User:
     def login(self): # login entirely contained to user class
         return 0
     
-    def add_task(self): # i believe just a gui interaction?
+    def add_task(self): # i believe just a gui interaction? might not need this function
         return 0
     
-    def provide_task_info(self): # will interact with task
+    def provide_task_info(self, name, description, dueDate, effortEstimation, priority, group): # will interact with task
         return 0
     
-    def select_task(self): #
+    def select_task(self): #also might be just a gui interaction
         return 0
     
-    def delete_task(self):
+    def delete_task(self): # 
         return 0
     
-    def update_task_info(self):
+    def update_task_info(self, name, description, dueDate, effortEstimation, priority, group): # pass new data and existing data of unchanged fields?
         return 0
     
-    def add_task_group(self):
+    def add_task_group(self, group):  # interact with group class
         return 0
     
-    def provide_group_info(self):
+    def provide_group_info(self, name, color, habitType):
         return 0
     
     def delete_group(self):
         return 0
     
-    def update_group_info(self):
+    def update_group_info(self, anem, color, habitType): # possibly merge provide and update group info into a single function?
         return 0
     
     def review_progress_report(self): # call get progress report
