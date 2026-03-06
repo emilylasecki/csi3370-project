@@ -7,7 +7,22 @@
     <title>Little Wins</title>
 </head>
 <body>
+
     <div id="list-container"> 
+
+        <div id="message" style="display:none; background:#d4edda; padding:10px;">
+        Task created successfully!
+        </div>
+
+        <script>
+        const params = new URLSearchParams(window.location.search);
+
+        if (params.get("success") === "1") {
+            document.getElementById("message").style.display = "block";
+        }
+        </script>
+
+
         <div id="header">
 
             <h1> Your Wins </h1>
@@ -54,4 +69,6 @@
 
 
 </body>
+
+
 </html>

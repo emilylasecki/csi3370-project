@@ -78,4 +78,4 @@ def add_task_route(
         userID=userID,
     )
 
-    return RedirectResponse(url="/taskcreation", status_code=HTTP_303_SEE_OTHER)
+    return RedirectResponse(url="/?success=1", status_code=HTTP_303_SEE_OTHER)
