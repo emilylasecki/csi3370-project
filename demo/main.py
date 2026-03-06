@@ -63,10 +63,9 @@ def add_task_route(
     Create a task using TaskManager and redirect back to task creation page
     """
 
-    # Placeholder userID; replace with real session user if needed
+    # Placeholder userID; replace with real session user
     userID = 1
 
-    # Map form 'groupID' to database column 'task_group_id'
     task_manager.add_task(
         taskName=taskName,
         description=description,
@@ -74,7 +73,7 @@ def add_task_route(
         status=status,
         effort=effort,
         priority=priority,
-        groupID=groupID,  # <-- this is the key fix
+        groupID=groupID,
         userID=userID,
     )
 
