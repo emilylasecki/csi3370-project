@@ -31,9 +31,10 @@
                         {% if groups %}
                             {% for group in groups %}
                                 <option value="{{ group.task_group_id }}">{{ group.habitType }}</option>
+                                <option value="0">No Group</option>
                             {% endfor %}
                         {% else %}
-                            <option value="0">No Groups Available</option>
+                            <option value="0">No Group</option>
                         {% endif %}
                     </select>
                     </div>

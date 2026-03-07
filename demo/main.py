@@ -84,17 +84,17 @@ def add_task_route(
     return RedirectResponse(url="/?success=1", status_code=HTTP_303_SEE_OTHER)
 
 def load_tasks():
-    with open("sample_tasks.json", "r") as file:
+    with open("app/sample_tasks.json", "r") as file:
         return json.load(file)
     
-@app.route("/tasks", methods=["GET"])
+@app.get("/tasks")
 def get_tasks():
     tasks = load_tasks()
-    return jsonify(tasks)
+    return tasks
 
 
-@app.route("/analyze", methods=["GET"])
+@app.get("/analyze")
 def analyze():
     tasks = load_tasks()
     result = analyze_tasks(tasks)
-    return jsonify(result)
+    return result
