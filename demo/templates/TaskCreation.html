@@ -27,16 +27,15 @@
                 <div id="selectors">
                     <div class="box">
                         <label for="group">Add to group:</label><br>
-                        <select name="groupID" id="group">
-                        {% if groups %}
-                            {% for group in groups %}
-                                <option value="{{ group.task_group_id }}">{{ group.habitType }}</option>
-                                <option value="0">No Group</option>
-                            {% endfor %}
-                        {% else %}
-                            <option value="0">No Group</option>
-                        {% endif %}
-                    </select>
+                        <select name="groupID">
+                        <option value="0">No Group</option>
+                        {% for group in groups %}
+                        <option value="{{ group.groupID }}">
+                            {{ group.groupName }}
+                        </option>
+                    {% endfor %}
+
+                      </select>
                     </div>
 
                     <div class="box">
@@ -50,7 +49,7 @@
 
                     <div class="box">
                         <label for="due">Due:</label><br>
-                        <input type="date" id="due" name="dueDate">
+                        <input type="date" id="due" name="dueDate" required>
                     </div>
                 </div>
 

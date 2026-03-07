@@ -43,11 +43,21 @@ def welcome(request: Request):
 # Task creation page
 @app.get("/taskcreation")
 def task_creation(request: Request):
-    groups_response = supabase.table("task_groups").select("*").execute()
-    groups = groups_response.data
+
+    groups = (
+        supabase
+        .table("task_groups")
+        .select("*")
+        .eq("user_id", 1)   # TODO make this not hard coded
+        .execute()
+    ).data
+
     return templates.TemplateResponse(
         "TaskCreation.html",
-        {"request": request, "groups": groups}
+        {
+            "request": request,
+            "groups": groups
+        }
     )
 
 # Handle task submission
