@@ -7,10 +7,10 @@ from app.task_manager import TaskManager
 from supabase import create_client
 from starlette.status import HTTP_303_SEE_OTHER
 from enviornment import SUPABASE_KEY, SUPABASE_URL
-from flask import Flask, jsonify
-from flask_cors import CORS
+
 import json
 from app.ai_helper import analyze_tasks
+from app.progress_report import generate_wrap
 
 # Initialize FastAPI
 app = FastAPI()
@@ -112,3 +112,13 @@ def analyze():
     tasks = load_tasks()
     result = analyze_tasks(tasks)
     return result
+
+@app.get("/wrap")
+def wrap():
+    tasks = load_tasks()
+    result = generate_wrap(tasks)
+    return result
+
+@app.get("/wrapped")
+def wrapped_page(request: Request):
+    return templates.TemplateResponse("Wrapped.html", {"request": request})

@@ -9,6 +9,7 @@ body {
     gap: 32px;               /* space between container & image */
 }
 
+
 #list-container {
     width: 640px;
     background: #e5e5e5;
