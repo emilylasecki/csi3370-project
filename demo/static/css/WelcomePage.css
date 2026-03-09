@@ -1,6 +1,13 @@
 *{
     box-sizing: border-box;
 }
+title{
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 20px;
+    color: darkgray;
+    align-self: center;
+}
 
 body{
     padding: 40px;
