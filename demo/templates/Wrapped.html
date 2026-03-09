@@ -1,13 +1,138 @@
 <!DOCTYPE html>
+<html lang="en">
 
-<html>
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title>Wrapped</title>
-        <link rel="stylesheet" href="">
-    </head>
-    <body>
-        <!--anddddd wrapped data goes here- will figure it out more when categories are nailed down-->
-    </body>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Monthly Wrapped</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;600;700;800&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="/static/wrapped.css" />
+</head>
+
+<body>
+
+  <div class="app-shell">
+
+    <!-- FIRST SCREEN -->
+    <section class="screen gift-screen active" id="giftScreen">
+
+      <div class="gift-stage" id="giftStage">
+
+        <div class="magic-dust dust-1"></div>
+        <div class="magic-dust dust-2"></div>
+        <div class="magic-dust dust-3"></div>
+        <div class="magic-dust dust-4"></div>
+
+        <div class="golden-swirl"></div>
+
+        <button class="magic-gift" id="magicBox" onclick="openGiftBox()" aria-label="Open wrapped box">
+
+          <div class="gift-lid"></div>
+          <div class="gift-base"></div>
+
+          <div class="gift-ribbon-v"></div>
+          <div class="gift-ribbon-h"></div>
+
+          <div class="gift-bow bow-left"></div>
+          <div class="gift-bow bow-right"></div>
+
+          <div class="gift-glow"></div>
+
+        </button>
+
+        <h1 class="main-title" id="mainTitle">Open Your Monthly Wrapped</h1>
+
+        <p class="main-subtitle">
+          Tap the gift to reveal your monthly task story
+        </p>
+
+        <div class="gift-actions" id="giftContinueRow">
+          <button class="sweet-btn primary-btn" onclick="startWrappedStory()">
+            Open the first card
+          </button>
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- CARD SCREEN -->
+    <section class="screen card-screen" id="cardScreen">
+
+      <div class="flip-book">
+
+        <div class="story-card card-theme-ocean" id="storyCard">
+
+          <div class="card-top-row">
+            <div class="card-kicker" id="cardTitle">March Wrapped • Total Tasks Completed</div>
+            <div class="candy-badge" id="candyEmoji">🍬</div>
+          </div>
+
+          <div class="card-body">
+            <div class="card-value" id="cardValue">42 Tasks</div>
+            <div class="card-stat" id="cardStat">You finished 42 tasks this month</div>
+            <div class="card-comment" id="cardComment">Your to-do list did not stand a chance.</div>
+          </div>
+
+          <div class="confetti confetti-a"></div>
+          <div class="confetti confetti-b"></div>
+          <div class="confetti confetti-c"></div>
+          <div class="confetti confetti-d"></div>
+          <div class="confetti confetti-e"></div>
+
+          <div class="candy-piece candy-left candy-blue" id="leftCandy"></div>
+          <div class="candy-piece candy-right candy-blue" id="rightCandy"></div>
+
+          <div class="fruit-piece fruit-left" id="fruitLeft">🫐</div>
+          <div class="fruit-piece fruit-right" id="fruitRight">🍏</div>
+
+          <div class="drink-piece drink-left" id="drinkLeft">🧋</div>
+          <div class="drink-piece drink-right" id="drinkRight">🍫</div>
+
+        </div>
+
+      </div>
+
+      <div class="card-actions">
+        <button class="sweet-btn secondary-btn" onclick="goBack()">Back</button>
+        <button class="sweet-btn primary-btn" id="nextBtn" onclick="goNext()">Next</button>
+      </div>
+
+    </section>
+
+
+    <!-- FINAL SUMMARY SCREEN -->
+    <section class="screen summary-screen" id="summaryScreen">
+
+      <div class="summary-card-shell">
+
+        <div class="summary-header">
+          <div>
+            <div class="summary-kicker">Monthly wrapped</div>
+            <h1 class="summary-title">Final Summary</h1>
+          </div>
+
+          <div class="summary-candy">🍬</div>
+        </div>
+
+        <div class="summary-content" id="summaryContent"></div>
+
+      </div>
+
+      <div class="card-actions">
+        <button class="sweet-btn secondary-btn" onclick="goBack()">Back</button>
+      </div>
+
+    </section>
+
+  </div>
+
+  <script src="/static/wrapped.js"></script>
+</body>
+
 </html>
