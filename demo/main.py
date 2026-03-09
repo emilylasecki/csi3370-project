@@ -40,6 +40,10 @@ def group_edit(request: Request):
 def welcome(request: Request):
     return templates.TemplateResponse("WelcomePage.html", {"request": request})
 
+@app.get("/wrapped")
+def welcome(request: Request):
+    return templates.TemplateResponse("Wrapped.html", {"request": request})
+
 # Task creation page
 @app.get("/taskcreation")
 def task_creation(request: Request):
