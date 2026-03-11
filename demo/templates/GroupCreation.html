@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>New Group</title>
+        <link rel="stylesheet" href="/static/css/GroupEdit.css">
+    </head>
+
+    <body>
+        <div id="container">
+
+            <header>
+                <h2>Group Creation</h2>
+                <img src="static/images/Info.png" alt="WHY">
+            </header>
+
+            <form method="post" action="/create_group">
+
+                <div class="text-entry">
+                    <label for="title">Title:</label>
+                    <input id="title" name="title" type="text">
+                </div>
+
+                <div>
+                    <label for="color">Color:</label><br>
+                    <select id="color" name="color">
+                        <option>Red</option>
+                        <option>Orange</option>
+                        <option>Yellow</option>
+                        <option>Green</option>
+                    </select>
+                </div>
+
+                <div class="checkbox-entry">
+                    <label for="habit">Habit:</label>
+                    <input type="checkbox" id="habit" name="habit">
+                </div>
+
+                <div class="submit-entry">
+                    <button type="submit">Create Group</button>
+                </div>
+
+            </form>
+
+        </div>
+    </body>
+</html>

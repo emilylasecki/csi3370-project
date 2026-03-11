@@ -4,6 +4,7 @@ from fastapi.responses import RedirectResponse
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 from app.task_manager import TaskManager
+from app.group_manager import GroupManager
 from supabase import create_client
 from starlette.status import HTTP_303_SEE_OTHER
 from enviornment import SUPABASE_KEY, SUPABASE_URL
@@ -26,6 +27,7 @@ supabase = create_client(SUPABASE_URL, SUPABASE_KEY)
 
 # TaskManager instance
 task_manager = TaskManager(supabase)
+group_manager = GroupManager(supabase)
 
 # Home page
 @app.get("/")
@@ -122,3 +124,28 @@ def wrap():
 @app.get("/wrapped")
 def wrapped_page(request: Request):
     return templates.TemplateResponse("Wrapped.html", {"request": request})
+
+@app.get("/groupcreation")
+def group_creation(request: Request):
+    return templates.TemplateResponse(
+        "GroupCreation.html",
+        {"request": request}
+    )
+
+@app.post("/create_group")
+def create_group(
+    title: str = Form(...),
+    color: str = Form(...),
+    habit: str = Form(None)
+):
+
+    user_id = 1  # placeholder user
+
+    group_manager.create_group(
+        title,
+        color,
+        habit,
+        user_id
+    )
+
+    return RedirectResponse(url="/?success=2", status_code=HTTP_303_SEE_OTHER)
