@@ -1,4 +1,5 @@
 from datetime import datetime
+from app.task_group import TaskGroup
 
 class GroupManager:
 
@@ -7,13 +8,19 @@ class GroupManager:
 
     def create_group(self, title, color, habit, user_id):
 
+        new_group = TaskGroup(
+            groupName = title,
+            color = color,
+            habitType = habit
+        )
+
         # Convert checkbox to boolean
-        habit_value = True if habit else False
+        new_group.habitType = True if habit else False
 
         data = {
-            "groupName": title,
-            "color": color,
-            "is_habit": habit_value,
+            "groupName": new_group.groupName,
+            "color": new_group.color,
+            "is_habit": new_group.habitType,
             "user_id": user_id
         }
 

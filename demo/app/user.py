@@ -65,7 +65,7 @@ class User:
     def delete_group(self):
         return 0
     
-    def update_group_info(self, anem, color, habitType): # possibly merge provide and update group info into a single function?
+    def update_group_info(self, name, color, habitType): # possibly merge provide and update group info into a single function?
         return 0
     
     def review_progress_report(self): # call get progress report
