@@ -11,7 +11,7 @@ class GroupManager:
         new_group = TaskGroup(
             groupName = title,
             color = color,
-            is_habit = habit
+            habitType = habit
         )
 
         # Convert checkbox to boolean
@@ -71,6 +71,26 @@ class GroupManager:
 
         response = self.supabase.table("task_groups") \
             .update(data) \
+            .eq("groupID", groupID) \
+            .execute()
+
+        return response
+    
+
+
+
+    def delete_group(self, groupID, user_id):
+
+        group = self.get_group(groupID)
+
+        if not group:
+            raise Exception("Group not found")
+
+        if group["user_id"] != user_id:
+            raise Exception("Unauthorized")
+
+        response = self.supabase.table("task_groups") \
+            .delete() \
             .eq("groupID", groupID) \
             .execute()
 

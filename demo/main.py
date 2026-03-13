@@ -192,3 +192,18 @@ def update_group_route(
         url=f"/modifygroup?groupID={groupID}",
         status_code=303
     )
+
+@app.post("/delete_group")
+def delete_group(groupID: int = Form(...)):
+
+    user_id = 1  # placeholder user
+
+    group_manager.delete_group(
+        groupID,
+        user_id
+    )
+
+    return RedirectResponse(
+        url="/modifygroup",
+        status_code=HTTP_303_SEE_OTHER
+    )
