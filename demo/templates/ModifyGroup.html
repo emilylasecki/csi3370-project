@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modify Groups</title>
+    <link rel="stylesheet" href="/static/css/MainPageCSS.css">
+</head>
+<body>
+
+<div id="selectors">
+    <!-- Group selection form -->
+    <form method="get" action="/modifygroup">
+        <div class="box">
+            <label for="groupID">Select Group:</label><br>
+            <select name="groupID" onchange="this.form.submit()">
+                <option value="0">No Group</option>
+                {% for group in groups %}
+                    <option value="{{ group.groupID }}"
+                        {% if selected_group and group.groupID == selected_group.groupID %}selected{% endif %}>
+                        {{ group.groupName }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+    </form>
+</div>
+
+<!-- Show selected group details -->
+{% if selected_group %}
+<div class="box">
+    <p><strong>Name:</strong> {{ selected_group.groupName }}</p>
+    <p><strong>Color:</strong> {{ selected_group.color }}</p>
+    <p><strong>Habit Type:</strong> {{ selected_group.habitType }}</p>
+</div>
+
+<!-- Edit group form -->
+<div id="edit_group_form">
+    <form method="post" action="/update_group">
+        <input type="hidden" name="groupID" value="{{ selected_group.groupID }}">
+
+        <div class="box">
+            <label for="title">Title:</label>
+            <input type="text" id="title" name="title" value="{{ selected_group.groupName }}">
+        </div>
+
+        <div class="box">
+            <label for="color">Color:</label>
+            <select id="color" name="color">
+                <option value="Red" {% if selected_group.color == "Red" %}selected{% endif %}>Red</option>
+                <option value="Orange" {% if selected_group.color == "Orange" %}selected{% endif %}>Orange</option>
+                <option value="Yellow" {% if selected_group.color == "Yellow" %}selected{% endif %}>Yellow</option>
+                <option value="Green" {% if selected_group.color == "Green" %}selected{% endif %}>Green</option>
+            </select>
+        </div>
+
+        <div class="checkbox-entry">
+            <label for="habit">Habit:</label>
+            <input type="checkbox" id="habit" name="habit"
+                {% if selected_group.habitType %}checked{% endif %}>
+        </div>
+
+        <div class="submit-entry">
+            <button type="submit">Update Group</button>
+        </div>
+    </form>
+</div>
+{% endif %}
+
+</body>
+</html>

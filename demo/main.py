@@ -42,10 +42,6 @@ def group_edit(request: Request):
 def welcome(request: Request):
     return templates.TemplateResponse("WelcomePage.html", {"request": request})
 
-@app.get("/wrapped")
-def welcome(request: Request):
-    return templates.TemplateResponse("Wrapped.html", {"request": request})
-
 # Task creation page
 @app.get("/taskcreation")
 def task_creation(request: Request):
@@ -149,3 +145,50 @@ def create_group(
     )
 
     return RedirectResponse(url="/?success=2", status_code=HTTP_303_SEE_OTHER)
+
+# GET route to show ModifyGroup page
+@app.get("/modifygroup")
+def modify_group(request: Request, groupID: int = 0):
+    user_id = 1  # placeholder for now
+    groups = group_manager.get_groups_for_user(user_id)
+
+    selected_group = None
+    if groupID != 0:
+        selected_group = group_manager.get_group(groupID)
+
+    return templates.TemplateResponse(
+        "ModifyGroup.html",
+        {
+            "request": request,
+            "groups": groups,
+            "selected_group": selected_group
+        }
+    )
+
+# POST route to handle updates
+@app.post("/update_group")
+def update_group_route(
+    groupID: int = Form(...),
+    title: str = Form(...),
+    color: str = Form(...),
+    habit: str = Form(None)
+):
+    """
+    Update a group using GroupManager.
+    """
+    user_id = 1  # placeholder
+
+    habit_bool = True if habit in ("on", "true", True) else False
+
+    group_manager.update_group(
+        groupID=groupID,
+        title=title,
+        color=color,
+        habit=habit_bool,
+        user_id=user_id
+    )
+
+    return RedirectResponse(
+        url=f"/modifygroup?groupID={groupID}",
+        status_code=303
+    )
