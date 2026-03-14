@@ -74,6 +74,42 @@ def welcome_signin(
     #User logs iin succesfully
     return RedirectResponse(url="/taskcreation", status_code=HTTP_303_SEE_OTHER)
 
+# Registration page
+@app.get("/register")
+def register_page(request: Request):
+    return templates.TemplateResponse("RegisterPage.html", {"request": request})
+
+@app.post("/register")
+def register_user(
+    request: Request,
+    Username: str = Form(...),
+    Email: str = Form(...),
+    Password: str = Form(...)
+):
+    if Username.strip() == "" or Email.strip() == "" or Password.strip() == "":
+        return templates.TemplateResponse(
+            "RegisterPage.html",
+            {
+                "request": request,
+                "error": "All fields cannot be empty."
+            }
+        )
+    
+    # Check if username already exists
+    existing_user = supabase.table("users").select("*").eq("username", Username).execute()
+    if len(existing_user.data) > 0:
+        return templates.TemplateResponse(
+            "RegisterPage.html",
+            {
+                "request": request,
+                "error": "Username already taken. Please choose a different one."
+            }
+        )
+    
+    # Insert new user into database
+    supabase.table("users").insert({"username": Username, "email": Email, "password": Password}).execute()
+
+    return RedirectResponse(url="/welcome?registered=1", status_code=HTTP_303_SEE_OTHER)
 
 # Task creation page
 @app.get("/taskcreation")
