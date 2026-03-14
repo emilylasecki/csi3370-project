@@ -1,5 +1,10 @@
-*{
-    box-sizing: border-box;
+html{
+    height: 100%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: white;
 }
 title{
     font-size: 24px;
@@ -10,16 +15,49 @@ title{
 }
 
 body{
+    height: 60%;
+    width: 60%;
     padding: 40px;
-    width: 600px;
-    border: 1px solid #ddd;
-    border-radius: 12px;
-    padding: 24px;
     display: flex;
     flex-direction: column;
     gap: 20px;
+    background-color: lightgray;
+}
+body h2{
+    font-size: 60px;
+    font-weight: bold;
+    margin-bottom: 20px;
+    color: black;
+    align-self: center;
 }
 
 input{
-    width: 40%;
+    width: 200px;
+}
+button{
+    width: 20%;
+    padding: 10px;
+    background-color: lightblue;
+    color: black;
+    border-color: darkgray;
+    border-radius: 5px;
+    cursor: pointer;
+    align-self: center;
+}
+
+label{
+    font-size: 18px;
+    font-weight: bold;
+    color: black;
+    align-self: center;
+}
+input{
+    align-self: center;
+}
+#sign up{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-self: left;
+    margin-top: 100px;
 }
