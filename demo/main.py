@@ -39,6 +39,9 @@ def home(request: Request):
 def group_edit(request: Request):
     return templates.TemplateResponse("GroupEdit.html", {"request": request})
 
+@app.get("/welcome")
+def welcome_page(request: Request):
+    return templates.TemplateResponse("WelcomePage.html", {"request": request})
 #sign in page
 @app.post("/welcome")
 def welcome_signin(
