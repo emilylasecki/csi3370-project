@@ -29,6 +29,7 @@ supabase = create_client(SUPABASE_URL, SUPABASE_KEY)
 task_manager = TaskManager(supabase)
 group_manager = GroupManager(supabase)
 
+
 # Home page
 @app.get("/")
 def home(request: Request):
@@ -38,9 +39,38 @@ def home(request: Request):
 def group_edit(request: Request):
     return templates.TemplateResponse("GroupEdit.html", {"request": request})
 
-@app.get("/welcome")
-def welcome(request: Request):
-    return templates.TemplateResponse("WelcomePage.html", {"request": request})
+#sign in page
+@app.post("/welcome")
+def welcome_signin(
+    request: Request,
+    Username: str = Form(...),
+    Password: str = Form(...)
+):
+    if Username.strip() == "" or Password.strip() == "":
+        return templates.TemplateResponse(
+            "WelcomePage.html",
+            {
+                "request": request,
+                "error": "Username and password cannot be empty."
+            }
+        )
+    
+    #find user in database
+    result = supabase.table("users").select("*").eq("username", Username).eq("password", Password).execute()
+
+    #for not registered users
+    if len(result.data) == 0:
+        return templates.TemplateResponse(
+            "WelcomePage.html",
+            {
+                "request": request,
+                "error": "Invalid username or password. Register if you don't have an account."
+            }
+        )
+    
+    #User logs iin succesfully
+    return RedirectResponse(url="/taskcreation", status_code=HTTP_303_SEE_OTHER)
+
 
 # Task creation page
 @app.get("/taskcreation")
