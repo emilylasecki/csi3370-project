@@ -49,7 +49,7 @@ label{
     font-size: 18px;
     font-weight: bold;
     color: black;
-    align-self: center;
+    align-items: center;
 }
 input{
     align-self: center;

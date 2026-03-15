@@ -47,9 +47,9 @@ def welcome_page(request: Request):
 def welcome_signin(
     request: Request,
     Username: str = Form(...),
-    Password: str = Form(...)
+    password: str = Form(...)
 ):
-    if Username.strip() == "" or Password.strip() == "":
+    if Username.strip() == "" or password.strip() == "":
         return templates.TemplateResponse(
             "WelcomePage.html",
             {
@@ -59,7 +59,7 @@ def welcome_signin(
         )
     
     #find user in database
-    result = supabase.table("users").select("*").eq("username", Username).eq("password", Password).execute()
+    result = supabase.table("users").select("*").eq("username", Username).eq("password", password).execute()
 
     #for not registered users
     if len(result.data) == 0:
@@ -84,9 +84,9 @@ def register_user(
     request: Request,
     Username: str = Form(...),
     Email: str = Form(...),
-    Password: str = Form(...)
+    password: str = Form(...)
 ):
-    if Username.strip() == "" or Email.strip() == "" or Password.strip() == "":
+    if Username.strip() == "" or Email.strip() == "" or password.strip() == "":
         return templates.TemplateResponse(
             "RegisterPage.html",
             {
@@ -107,7 +107,7 @@ def register_user(
         )
     
     # Insert new user into database
-    supabase.table("users").insert({"username": Username, "email": Email, "password": Password}).execute()
+    supabase.table("users").insert({"username": Username, "email": Email, "password": password}).execute()
 
     return RedirectResponse(url="/welcome?registered=1", status_code=HTTP_303_SEE_OTHER)
 

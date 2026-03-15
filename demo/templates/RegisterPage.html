@@ -7,18 +7,18 @@
 </head>
 <body>
     <h2>Register for LittleWins!</h2>
+    <form action="/register" method="POST">
     <label for="new-username">Create Username:</label>
-    <input id="new-username" type="text">
+    <input id="new-username" name="Username" type="text">
     
     <label for="email">Email:</label>
-    <input id="email" type="email">
+    <input id="email" name="Email" type="email">
 
-    <label for="new-password">Create Password:</label>
-    <input id="new-password" type="password">
-
-    
+    <label for="password">Create Password:</label>
+    <input id="password" name="password" type="password">
 
     <a href="welcome"><button id="register-submit" type="submit">Sign up</button></a>
+    </form>
 </body>
 
 
