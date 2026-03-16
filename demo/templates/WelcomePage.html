@@ -9,6 +9,11 @@
 </head>
 <body>
     <h2>Welcome to LittleWins!</h2>
+
+    {% if error %}
+    <p style="color:red;">{{ error }}</p>
+    {% endif %}
+    
     <form action="/welcome" method="POST">
 
     <label for="username">Username:</label>
