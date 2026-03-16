@@ -8,6 +8,7 @@ from app.group_manager import GroupManager
 from supabase import create_client
 from starlette.status import HTTP_303_SEE_OTHER
 from enviornment import SUPABASE_KEY, SUPABASE_URL
+from starlette.middleware.sessions import SessionMiddleware
 
 import json
 from app.ai_helper import analyze_tasks
@@ -15,6 +16,8 @@ from app.progress_report import generate_wrap
 
 # Initialize FastAPI
 app = FastAPI()
+
+app.add_middleware(SessionMiddleware, secret_key="super-secret-key")
 
 # Mount static files
 app.mount("/static", StaticFiles(directory="static"), name="static")
@@ -28,6 +31,12 @@ supabase = create_client(SUPABASE_URL, SUPABASE_KEY)
 # TaskManager instance
 task_manager = TaskManager(supabase)
 group_manager = GroupManager(supabase)
+
+def get_current_user(request: Request):
+    user_id = request.session.get("user_id")
+    if not user_id:
+        return None
+    return user_id
 
 
 # Home page
@@ -72,7 +81,12 @@ def welcome_signin(
         )
     
     #User logs iin succesfully
-    return RedirectResponse(url="/taskcreation", status_code=HTTP_303_SEE_OTHER)
+    user = result.data[0]
+
+    request.session["user_id"] = user["user_id"]
+    request.session["username"] = user["username"]
+
+    return RedirectResponse(url="/", status_code=HTTP_303_SEE_OTHER)
 
 # Registration page
 @app.get("/register")
@@ -115,11 +129,16 @@ def register_user(
 @app.get("/taskcreation")
 def task_creation(request: Request):
 
+    user_id = get_current_user(request)
+
+    if not user_id:
+        return RedirectResponse("/welcome", status_code=303)
+
     groups = (
         supabase
         .table("task_groups")
         .select("*")
-        .eq("user_id", 1)   # TODO make this not hard coded
+        .eq("user_id", user_id)   # TODO make this not hard coded
         .execute()
     ).data
 
@@ -149,7 +168,10 @@ def add_task_route(
     """
 
     # Placeholder userID; replace with real session user
-    userID = 1
+    userID = get_current_user(request)
+
+    if not userID:
+        return RedirectResponse("/welcome", status_code =303)
 
     task_manager.add_task(
         taskName=taskName,
@@ -199,12 +221,17 @@ def group_creation(request: Request):
 
 @app.post("/create_group")
 def create_group(
+    request: Request,
     title: str = Form(...),
     color: str = Form(...),
     habit: str = Form(None)
 ):
 
-    user_id = 1  # placeholder user
+    user_id = get_current_user(request)
+
+    if not user_id:
+        return RedirectResponse("/welcome", status_code=303)
+    
 
     group_manager.create_group(
         title,
@@ -218,7 +245,11 @@ def create_group(
 # GET route to show ModifyGroup page
 @app.get("/modifygroup")
 def modify_group(request: Request, groupID: int = 0):
-    user_id = 1  # placeholder for now
+    user_id = get_current_user(request)
+
+    if not user_id:
+        return RedirectResponse("/welcome", status_code=303)
+
     groups = group_manager.get_groups_for_user(user_id)
 
     selected_group = None
@@ -237,6 +268,7 @@ def modify_group(request: Request, groupID: int = 0):
 # POST route to handle updates
 @app.post("/update_group")
 def update_group_route(
+    request: Request,
     groupID: int = Form(...),
     title: str = Form(...),
     color: str = Form(...),
@@ -245,7 +277,7 @@ def update_group_route(
     """
     Update a group using GroupManager.
     """
-    user_id = 1  # placeholder
+    user_id = get_current_user(request)
 
     habit_bool = True if habit in ("on", "true", True) else False
 
@@ -263,16 +295,21 @@ def update_group_route(
     )
 
 @app.post("/delete_group")
-def delete_group(groupID: int = Form(...)):
+def delete_group(request: Request, groupID: int = Form(...)):
 
-    user_id = 1  # placeholder user
+    user_id = get_current_user(request)
 
-    group_manager.delete_group(
-        groupID,
-        user_id
-    )
+    if not user_id:
+        return RedirectResponse("/welcome", status_code=303)
+
+    group_manager.delete_group(groupID, user_id)
 
     return RedirectResponse(
         url="/modifygroup",
         status_code=HTTP_303_SEE_OTHER
     )
+
+@app.get("/logout")
+def logout(request: Request):
+    request.session.clear()
+    return RedirectResponse("/welcome", status_code=303)
