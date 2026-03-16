@@ -42,10 +42,21 @@ def get_current_user(request: Request):
 # Home page
 @app.get("/")
 def home(request: Request):
+    user_id = request.session.get("user_id")
+
+    if not user_id:
+        return RedirectResponse("/welcome", status_code=303)
+    
     return templates.TemplateResponse("index.html", {"request": request})
 
 @app.get("/groupedit")
 def group_edit(request: Request):
+
+    user_id = request.session.get("user_id")
+
+    if not user_id:
+        return RedirectResponse("/welcome", status_code=303)
+
     return templates.TemplateResponse("GroupEdit.html", {"request": request})
 
 @app.get("/welcome")
@@ -214,6 +225,12 @@ def wrapped_page(request: Request):
 
 @app.get("/groupcreation")
 def group_creation(request: Request):
+
+    user_id = request.session.get("user_id")
+
+    if not user_id:
+        return RedirectResponse("/welcome", status_code=303)
+
     return templates.TemplateResponse(
         "GroupCreation.html",
         {"request": request}
@@ -277,7 +294,10 @@ def update_group_route(
     """
     Update a group using GroupManager.
     """
-    user_id = get_current_user(request)
+    user_id = request.session.get("user_id")
+
+    if not user_id:
+        return RedirectResponse("/welcome", status_code=303)
 
     habit_bool = True if habit in ("on", "true", True) else False
 
@@ -288,6 +308,9 @@ def update_group_route(
         habit=habit_bool,
         user_id=user_id
     )
+
+    print("SESSION USER:", user_id)
+    print("GROUP ID:", groupID)
 
     return RedirectResponse(
         url=f"/modifygroup?groupID={groupID}",
