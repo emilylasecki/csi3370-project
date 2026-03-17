@@ -52,8 +52,37 @@ dd {
 }
 
 
-#wrapped{
+
+
+#wrapped {
     text-align: center;
-    padding: 0;
+    text-decoration: none;
+    color: black;
+    display: inline-block;
 }
 
+#wrapped img {
+    width: 120px !important;
+    max-width: 120px !important;
+    height: auto !important;
+    display: block;
+    margin: 0 auto;
+}
+
+#wrapped p {
+    margin-top: 2px;
+    font-family: "Baloo 2", cursive;
+    font-size: 22px;
+    font-weight: 800;
+    color: #ff4fa3;
+}
+
+#wrapped:hover img {
+    transform: scale(1.15) rotate(-3deg);
+    transition: transform 0.2s ease;
+}
+
+#wrapped:hover p {
+    transform: scale(1.05);
+    transition: 0.2s ease;
+}

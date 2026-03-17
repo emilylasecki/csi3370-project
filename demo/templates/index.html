@@ -30,53 +30,48 @@
         }
         </script>
 
-
         <div id="header">
-
-            <h1> Your Wins </h1>
+            <h1>Your Wins</h1>
 
             <div id="actions">
-                <span id="spaceSpan"> Filter </span>
-                <span> Sort <button>&#8595</button> </span>
+                <span id="spaceSpan">Filter</span>
+                <span>Sort <button>&#8595</button></span>
             </div>
-
         </div>
 
+        <div id="tasks">
+            <img src="/static/images/CheckSquare.png" id="icon">
+            <dl>
+                <dt>Task</dt>
+                <dd>Task Description</dd>
+            </dl>
+        </div>
 
-
-            <div id="tasks">
-                <img src="static/images/CheckSquare.png" id="icon">
-                <dl>  <!-- doing dl instead of ul since it comes with a description tag -->
-                    <dt> Task </dt>
-                    <dd> Task Description </dd>
-                </dl>
-            </div>
-
-        
-        
         <hr>
         
         <div id="habits">
-            <img src="static/images/Award.png" id="image">
-            <dl>  <!-- doing dl instead of ul since it comes with a description tag -->
-                <dt> Habit </dt>
-                <dd> Habit Description </dd>
+            <img src="/static/images/Award.png" id="image">
+            <dl>
+                <dt>Habit</dt>
+                <dd>Habit Description</dd>
             </dl>
         </div>
-        <a href="taskcreation">
+
+        <a href="/taskcreation">
             <button>Add</button> 
         </a>
 
     </div>
 
-    <div id="wrapped">
-      <img src="static/images/Present.png"> 
-      <p> Wrap it up! </p>
-    </div>
+<a href="/wrapped" id="wrapped">
+    <img src="/static/images/gift.png" id="wrapIcon" alt="Wrap gift">
 
-
+    {% if wrap_ready %}
+        <p>Wrap ready!</p>
+    {% else %}
+        <p>Collecting wins...</p>
+    {% endif %}
+</a>
 
 </body>
-
-
 </html>

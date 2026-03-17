@@ -17,7 +17,55 @@
 <body>
   <div class="app-shell">
 
-    <!-- first screen -->
+    {% if wrap_locked %}
+
+    <section class="screen gift-screen active" id="giftScreen">
+      <div class="gift-stage" id="giftStage">
+
+        <div class="magic-dust dust-1"></div>
+        <div class="magic-dust dust-2"></div>
+        <div class="magic-dust dust-3"></div>
+        <div class="magic-dust dust-4"></div>
+
+        <button
+          class="magic-gift"
+          id="magicBox"
+          type="button"
+          aria-label="Wrapped locked"
+        >
+          <div class="gift-lid"></div>
+          <div class="gift-base"></div>
+
+          <div class="gift-ribbon-v"></div>
+          <div class="gift-ribbon-h"></div>
+
+          <div class="gift-bow-wrap" id="giftBowWrap">
+            <div class="gift-bow bow-left"></div>
+            <div class="gift-bow bow-right"></div>
+            <div class="gift-bow-knot"></div>
+          </div>
+
+          <div class="gift-glow"></div>
+        </button>
+
+        <h1 class="main-title">Monthly Wrap Coming Soon</h1>
+
+        <p class="main-subtitle">
+          Your wrap is still collecting wins.
+        </p>
+
+        <p class="main-subtitle">
+          Complete {{ tasks_needed }} more task{% if tasks_needed != 1 %}s{% endif %} this month to unlock it.
+        </p>
+
+        <div class="gift-actions" style="display: flex;">
+          <a href="/" class="sweet-btn dashboard-btn">Return to Dashboard</a>
+        </div>
+      </div>
+    </section>
+
+    {% else %}
+
     <section class="screen gift-screen active" id="giftScreen">
       <div class="gift-stage" id="giftStage">
 
@@ -61,20 +109,19 @@
       </div>
     </section>
 
-    <!-- card screen -->
     <section class="screen card-screen" id="cardScreen">
       <div class="flip-book">
         <div class="story-card card-theme-ocean" id="storyCard">
 
           <div class="card-top-row">
-            <div class="card-kicker" id="cardTitle">March Wrapped • Total Tasks Completed</div>
+            <div class="card-kicker" id="cardTitle">Monthly Wrapped</div>
             <div class="candy-badge" id="candyEmoji">🍬</div>
           </div>
 
           <div class="card-body">
-            <div class="card-value" id="cardValue">42 Tasks</div>
-            <div class="card-stat" id="cardStat">You finished 42 tasks this month</div>
-            <div class="card-comment" id="cardComment">Your to-do list did not stand a chance.</div>
+            <div class="card-value" id="cardValue">Loading...</div>
+            <div class="card-stat" id="cardStat">Getting your task data</div>
+            <div class="card-comment" id="cardComment">Please wait</div>
           </div>
 
           <div class="candy-piece candy-left candy-blue" id="leftCandy"></div>
@@ -90,7 +137,6 @@
       </div>
     </section>
 
-    <!-- summary screen -->
     <section class="screen summary-screen" id="summaryScreen">
       <div class="summary-card-shell" id="summaryCard">
         <div class="summary-header">
@@ -106,11 +152,25 @@
       </div>
 
       <div class="card-actions">
-        <button class="sweet-btn secondary-btn" onclick="goBack()">Back</button>
+        <button class="sweet-btn replay-btn" onclick="replayWrapped()">
+          Replay Wrap
+        </button>
+
+        <a href="/" class="sweet-btn dashboard-btn">
+          Return to Dashboard
+        </a>
       </div>
     </section>
 
+    {% endif %}
+
   </div>
+
+  <script>
+    const wrapDataFromBackend = {{ wrap_data | tojson | safe }};
+    const wrapLocked = {{ wrap_locked | tojson | safe }};
+    const tasksNeeded = {{ tasks_needed | tojson | safe }};
+  </script>
 
   <script src="/static/js/wrapped.js"></script>
 </body>
