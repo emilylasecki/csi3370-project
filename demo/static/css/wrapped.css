@@ -1079,3 +1079,25 @@ body {
     }
   }
 }
+.replay-btn {
+    background-color: #28a745;   /* regular green */
+    color: white;                /* white text */
+    border: none;
+}
+
+.replay-btn:hover {
+    background-color: #63cdb3;
+}
+
+.dashboard-btn {
+    background-color: #4A6CF7;
+    color: white;
+    border: none;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.dashboard-btn:hover {
+    background-color: #3556e3;
+    text-decoration: none;
+}

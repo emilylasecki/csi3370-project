@@ -1,15 +1,23 @@
 const currentMonth = new Date().toLocaleString("default", { month: "long" });
 
+const backendData = typeof wrapDataFromBackend !== "undefined" ? wrapDataFromBackend : {};
+const isWrapLocked = typeof wrapLocked !== "undefined" ? wrapLocked : false;
+const tasksNeededCount = typeof tasksNeeded !== "undefined" ? tasksNeeded : 0;
+
+console.log("BACKEND DATA:", backendData);
+console.log("WRAP LOCKED:", isWrapLocked);
+console.log("TASKS NEEDED:", tasksNeededCount);
+
 const wrappedData = [
   {
-    title: "Total Tasks Completed",
-    value: "42 Tasks",
-    stat: "You finished 42 tasks this month",
+    title: "Total Tasks",
+    value: `${backendData.total_tasks ?? 0} Tasks`,
+    stat: `You created ${backendData.total_tasks ?? 0} tasks`,
     comments: [
-      "Your to-do list did not stand a chance.",
-      "Productivity level: impressive.",
-      "That checklist got WORKED this month.",
-      "You really showed those tasks who is boss."
+      "Every big result starts with one task.",
+      "You gave yourself goals to work on.",
+      "Your month had a full to-do list.",
+      "You kept yourself busy this month."
     ],
     candy: "🍬",
     theme: "card-theme-ocean",
@@ -17,14 +25,14 @@ const wrappedData = [
     fruits: ["🫐", "🍏", "🍎", "🍒"]
   },
   {
-    title: "Most Productive Day",
-    value: "Tuesday",
-    stat: "You completed 11 tasks on Tuesday",
+    title: "Completed Tasks",
+    value: `${backendData.completed_tasks ?? 0} Done`,
+    stat: `You completed ${backendData.completed_tasks ?? 0} tasks`,
     comments: [
-      "Apparently Tuesdays are your main character moment.",
-      "Tuesday really came through for you.",
-      "That day was carrying the whole month.",
-      "Tuesday was clearly in its productive era."
+      "Finished tasks always feel satisfying.",
+      "Progress was definitely made.",
+      "You got important things done.",
+      "That checklist got shorter."
     ],
     candy: "🍭",
     theme: "card-theme-lemon",
@@ -32,14 +40,14 @@ const wrappedData = [
     fruits: ["🍋", "🍌", "🍍", "🍊"]
   },
   {
-    title: "Top Task Category",
-    value: "School",
-    stat: "48% of your completed tasks were School tasks",
+    title: "Completion Rate",
+    value: `${backendData.completion_rate ?? 0}%`,
+    stat: `Your completion rate was ${backendData.completion_rate ?? 0}%`,
     comments: [
-      "Academic weapon energy detected.",
-      "Your planner basically turned into a study guide.",
-      "Brains were definitely in use this month.",
-      "School tasks stayed at the top of the leaderboard."
+      "Consistency builds momentum.",
+      "Every finished task counts.",
+      "Small wins add up over time.",
+      "You are building stronger habits."
     ],
     candy: "🍪",
     theme: "card-theme-mint",
@@ -47,14 +55,14 @@ const wrappedData = [
     fruits: ["🥝", "🍐", "🍇", "🍈"]
   },
   {
-    title: "Longest Streak",
-    value: "6 Days",
-    stat: "You completed tasks 6 days in a row",
+    title: "Top Priority Type",
+    value: `${backendData.top_priority ?? "None"}`,
+    stat: `Most of your tasks were ${backendData.top_priority ?? "None"} priority`,
     comments: [
-      "Consistency unlocked.",
-      "That streak deserves a tiny celebration.",
-      "Momentum was definitely on your side.",
-      "Six days of focus is actually iconic."
+      "Your priorities shaped your month.",
+      "You focused on what seemed most important.",
+      "Priority choices say a lot about your workflow.",
+      "Your task style is starting to show."
     ],
     candy: "🍫",
     theme: "card-theme-lavender",
@@ -62,14 +70,14 @@ const wrappedData = [
     fruits: ["🍇", "🫐", "🍉", "🍒"]
   },
   {
-    title: "Your Task Style",
-    value: "Night Owl Worker",
-    stat: "41% of your tasks were completed after 9 PM",
+    title: "Overdue Tasks",
+    value: `${backendData.overdue_tasks ?? 0}`,
+    stat: `You had ${backendData.overdue_tasks ?? 0} overdue tasks`,
     comments: [
-      "Late night productivity arc activated.",
-      "The moon witnessed most of your achievements.",
-      "Night shift but make it productive.",
-      "Some people sleep. You complete tasks."
+      "A few missed deadlines happen to everyone.",
+      "This is a good spot to improve next month.",
+      "Try breaking tasks into smaller parts next time.",
+      "Deadlines are easier when tasks feel smaller."
     ],
     candy: "🧁",
     theme: "card-theme-sunset",
@@ -81,21 +89,21 @@ const wrappedData = [
 let currentIndex = -1;
 let giftOpened = false;
 
-/* picks one random comment */
 function getRandomComment(comments) {
   return comments[Math.floor(Math.random() * comments.length)];
 }
 
-/* shows only one screen */
 function showScreen(screenId) {
   document.querySelectorAll(".screen").forEach((screen) => {
     screen.classList.remove("active");
   });
 
-  document.getElementById(screenId).classList.add("active");
+  const targetScreen = document.getElementById(screenId);
+  if (targetScreen) {
+    targetScreen.classList.add("active");
+  }
 }
 
-/* adds falling confetti to all screens */
 function ensureGlobalConfetti() {
   document.querySelectorAll(".global-confetti").forEach((el) => el.remove());
 
@@ -120,7 +128,6 @@ function ensureGlobalConfetti() {
   });
 }
 
-/* adds falling confetti inside the card and summary */
 function ensureInnerConfetti() {
   document.querySelectorAll(".card-confetti").forEach((el) => el.remove());
 
@@ -147,9 +154,9 @@ function ensureInnerConfetti() {
   });
 }
 
-/* makes the bow fly up and away */
 function launchBowAway() {
   const giftStage = document.getElementById("giftStage");
+  if (!giftStage) return;
 
   const bowFly = document.createElement("div");
   bowFly.className = "bow-fly-away";
@@ -174,8 +181,8 @@ function launchBowAway() {
   }, 1100);
 }
 
-/* opens gift only one time */
 function openGiftBox() {
+  if (isWrapLocked) return;
   if (giftOpened) return;
 
   giftOpened = true;
@@ -184,28 +191,37 @@ function openGiftBox() {
   const continueRow = document.getElementById("giftContinueRow");
   const mainTitle = document.getElementById("mainTitle");
 
-  giftStage.classList.add("open");
-  mainTitle.textContent = `${currentMonth} Wrapped is here`;
+  if (giftStage) {
+    giftStage.classList.add("open");
+  }
+
+  if (mainTitle) {
+    mainTitle.textContent = `${currentMonth} Wrapped is here`;
+  }
 
   setTimeout(() => {
     launchBowAway();
   }, 120);
 
   setTimeout(() => {
-    continueRow.style.display = "flex";
+    if (continueRow) {
+      continueRow.style.display = "flex";
+    }
   }, 900);
 }
 
-/* starts the story from first card */
 function startWrappedStory() {
+  if (isWrapLocked) return;
+
   currentIndex = 0;
   renderCard(true);
   showScreen("cardScreen");
 }
 
-/* shows 4 fruits, 2 on each side */
 function renderFruitFloor(fruits) {
   const fruitFloor = document.getElementById("fruitFloor");
+  if (!fruitFloor) return;
+
   fruitFloor.innerHTML = "";
 
   const classes = ["left-one", "left-two", "right-one", "right-two"];
@@ -219,41 +235,55 @@ function renderFruitFloor(fruits) {
   });
 }
 
-/* fills the current card */
 function renderCard(animate = false) {
+  if (isWrapLocked) return;
+
   const item = wrappedData[currentIndex];
+  if (!item) return;
+
   const comment = getRandomComment(item.comments);
 
-  document.getElementById("cardTitle").textContent = `${currentMonth} Wrapped • ${item.title}`;
-  document.getElementById("cardValue").textContent = item.value;
-  document.getElementById("cardStat").textContent = item.stat;
-  document.getElementById("cardComment").textContent = comment;
-  document.getElementById("candyEmoji").textContent = item.candy;
+  const cardTitle = document.getElementById("cardTitle");
+  const cardValue = document.getElementById("cardValue");
+  const cardStat = document.getElementById("cardStat");
+  const cardComment = document.getElementById("cardComment");
+  const candyEmoji = document.getElementById("candyEmoji");
+
+  if (cardTitle) cardTitle.textContent = `${currentMonth} Wrapped • ${item.title}`;
+  if (cardValue) cardValue.textContent = item.value;
+  if (cardStat) cardStat.textContent = item.stat;
+  if (cardComment) cardComment.textContent = comment;
+  if (candyEmoji) candyEmoji.textContent = item.candy;
 
   const card = document.getElementById("storyCard");
-  card.className = `story-card ${item.theme}`;
+  if (card) {
+    card.className = `story-card ${item.theme}`;
+  }
 
   const leftCandy = document.getElementById("leftCandy");
   const rightCandy = document.getElementById("rightCandy");
 
-  leftCandy.className = `candy-piece candy-left ${item.candyClass}`;
-  rightCandy.className = `candy-piece candy-right ${item.candyClass}`;
+  if (leftCandy) leftCandy.className = `candy-piece candy-left ${item.candyClass}`;
+  if (rightCandy) rightCandy.className = `candy-piece candy-right ${item.candyClass}`;
 
   renderFruitFloor(item.fruits);
   ensureInnerConfetti();
 
-  if (animate) {
+  if (animate && card) {
     card.style.animation = "none";
     void card.offsetWidth;
     card.style.animation = "cardRise 0.8s cubic-bezier(0.2, 0.8, 0.2, 1)";
   }
 
   const nextBtn = document.getElementById("nextBtn");
-  nextBtn.textContent = currentIndex === wrappedData.length - 1 ? "Final Summary" : "Next";
+  if (nextBtn) {
+    nextBtn.textContent = currentIndex === wrappedData.length - 1 ? "Final Summary" : "Next";
+  }
 }
 
-/* goes to next card or final summary */
 function goNext() {
+  if (isWrapLocked) return;
+
   if (currentIndex < wrappedData.length - 1) {
     currentIndex++;
     renderCard(true);
@@ -263,9 +293,12 @@ function goNext() {
   }
 }
 
-/* goes back one screen */
 function goBack() {
-  if (document.getElementById("summaryScreen").classList.contains("active")) {
+  if (isWrapLocked) return;
+
+  const summaryScreen = document.getElementById("summaryScreen");
+
+  if (summaryScreen && summaryScreen.classList.contains("active")) {
     currentIndex = wrappedData.length - 1;
     renderCard(true);
     showScreen("cardScreen");
@@ -280,21 +313,71 @@ function goBack() {
   }
 }
 
-/* builds final summary */
 function renderSummary() {
-  const summaryContent = document.getElementById("summaryContent");
+  if (isWrapLocked) return;
 
-  summaryContent.innerHTML = wrappedData.map((item) => `
+  const summaryContent = document.getElementById("summaryContent");
+  if (!summaryContent) return;
+
+  summaryContent.innerHTML = `
     <div class="summary-line">
-      <strong>${item.title}:</strong> ${item.value}<br>
-      ${item.stat}
+      <strong>Total Tasks:</strong> ${backendData.total_tasks ?? 0}<br>
+      You created ${backendData.total_tasks ?? 0} tasks
     </div>
-  `).join("");
+
+    <div class="summary-line">
+      <strong>Completed Tasks:</strong> ${backendData.completed_tasks ?? 0}<br>
+      You completed ${backendData.completed_tasks ?? 0} tasks
+    </div>
+
+    <div class="summary-line">
+      <strong>In Progress:</strong> ${backendData.in_progress_tasks ?? 0}<br>
+      Tasks still being worked on
+    </div>
+
+    <div class="summary-line">
+      <strong>Not Started:</strong> ${backendData.not_started_tasks ?? 0}<br>
+      Tasks you have not started yet
+    </div>
+
+    <div class="summary-line">
+      <strong>Overdue Tasks:</strong> ${backendData.overdue_tasks ?? 0}<br>
+      Tasks that passed their due date
+    </div>
+
+    <div class="summary-line">
+      <strong>Summary:</strong> ${backendData.summary_message ?? "No summary available"}
+    </div>
+  `;
 
   ensureInnerConfetti();
 }
 
-/* runs once on page load */
+function replayWrapped() {
+  if (isWrapLocked) return;
+
+  currentIndex = -1;
+  giftOpened = false;
+
+  showScreen("giftScreen");
+
+  const giftStage = document.getElementById("giftStage");
+  const continueRow = document.getElementById("giftContinueRow");
+  const mainTitle = document.getElementById("mainTitle");
+
+  if (giftStage) {
+    giftStage.classList.remove("open");
+  }
+
+  if (continueRow) {
+    continueRow.style.display = "none";
+  }
+
+  if (mainTitle) {
+    mainTitle.textContent = "Open Your Monthly Wrapped";
+  }
+}
+
 document.addEventListener("DOMContentLoaded", () => {
   ensureGlobalConfetti();
   ensureInnerConfetti();
