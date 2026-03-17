@@ -9,6 +9,8 @@ from supabase import create_client
 from starlette.status import HTTP_303_SEE_OTHER
 from enviornment import SUPABASE_KEY, SUPABASE_URL
 from datetime import datetime, date
+from starlette.middleware.sessions import SessionMiddleware
+
 import json
 
 from app.ai_helper import analyze_tasks
@@ -16,6 +18,9 @@ from app.progress_report import generate_wrap
 
 app = FastAPI()
 
+app.add_middleware(SessionMiddleware, secret_key="super-secret-key")
+
+# Mount static files
 app.mount("/static", StaticFiles(directory="static"), name="static")
 templates = Jinja2Templates(directory="templates")
 
@@ -23,6 +28,12 @@ supabase = create_client(SUPABASE_URL, SUPABASE_KEY)
 
 task_manager = TaskManager(supabase)
 group_manager = GroupManager(supabase)
+
+def get_current_user(request: Request):
+    user_id = request.session.get("user_id")
+    if not user_id:
+        return None
+    return user_id
 
 
 @app.get("/")
@@ -69,9 +80,21 @@ def home(request: Request):
             status_code=500
         )
 
+    user_id = request.session.get("user_id")
+
+    if not user_id:
+        return RedirectResponse("/welcome", status_code=303)
+    
+    return templates.TemplateResponse("index.html", {"request": request})
 
 @app.get("/groupedit")
 def group_edit(request: Request):
+
+    user_id = request.session.get("user_id")
+
+    if not user_id:
+        return RedirectResponse("/welcome", status_code=303)
+
     return templates.TemplateResponse("GroupEdit.html", {"request": request})
 
 
@@ -114,6 +137,14 @@ def welcome_signin(
         )
 
     return RedirectResponse(url="/taskcreation", status_code=HTTP_303_SEE_OTHER)
+    
+    #User logs iin succesfully
+    user = result.data[0]
+
+    request.session["user_id"] = user["user_id"]
+    request.session["username"] = user["username"]
+
+    return RedirectResponse(url="/", status_code=HTTP_303_SEE_OTHER)
 
 
 @app.get("/register")
@@ -167,11 +198,18 @@ def register_user(
 
 @app.get("/taskcreation")
 def task_creation(request: Request):
+
+    user_id = get_current_user(request)
+
+    if not user_id:
+        return RedirectResponse("/welcome", status_code=303)
+
     groups = (
         supabase
         .table("task_groups")
         .select("*")
         .eq("user_id", 1)
+        .eq("user_id", user_id)   # TODO make this not hard coded
         .execute()
     ).data
 
@@ -197,6 +235,15 @@ def add_task_route(
     is_habit: bool = Form(False)
 ):
     userID = 1
+    """
+    Create a task using TaskManager and redirect back to task creation page
+    """
+
+    # Placeholder userID; replace with real session user
+    userID = get_current_user(request)
+
+    if not userID:
+        return RedirectResponse("/welcome", status_code =303)
 
     task_manager.add_task(
         taskName=taskName,
@@ -301,6 +348,12 @@ def wrapped_page(request: Request):
 
 @app.get("/groupcreation")
 def group_creation(request: Request):
+
+    user_id = request.session.get("user_id")
+
+    if not user_id:
+        return RedirectResponse("/welcome", status_code=303)
+
     return templates.TemplateResponse(
         "GroupCreation.html",
         {"request": request}
@@ -309,11 +362,18 @@ def group_creation(request: Request):
 
 @app.post("/create_group")
 def create_group(
+    request: Request,
     title: str = Form(...),
     color: str = Form(...),
     habit: str = Form(None)
 ):
     user_id = 1
+
+    user_id = get_current_user(request)
+
+    if not user_id:
+        return RedirectResponse("/welcome", status_code=303)
+    
 
     group_manager.create_group(
         title,
@@ -328,6 +388,11 @@ def create_group(
 @app.get("/modifygroup")
 def modify_group(request: Request, groupID: int = 0):
     user_id = 1
+    user_id = get_current_user(request)
+
+    if not user_id:
+        return RedirectResponse("/welcome", status_code=303)
+
     groups = group_manager.get_groups_for_user(user_id)
 
     selected_group = None
@@ -346,12 +411,20 @@ def modify_group(request: Request, groupID: int = 0):
 
 @app.post("/update_group")
 def update_group_route(
+    request: Request,
     groupID: int = Form(...),
     title: str = Form(...),
     color: str = Form(...),
     habit: str = Form(None)
 ):
     user_id = 1
+    """
+    Update a group using GroupManager.
+    """
+    user_id = request.session.get("user_id")
+
+    if not user_id:
+        return RedirectResponse("/welcome", status_code=303)
 
     habit_bool = True if habit in ("on", "true", True) else False
 
@@ -363,6 +436,9 @@ def update_group_route(
         user_id=user_id
     )
 
+    print("SESSION USER:", user_id)
+    print("GROUP ID:", groupID)
+
     return RedirectResponse(
         url=f"/modifygroup?groupID={groupID}",
         status_code=303
@@ -372,13 +448,21 @@ def update_group_route(
 @app.post("/delete_group")
 def delete_group(groupID: int = Form(...)):
     user_id = 1
+def delete_group(request: Request, groupID: int = Form(...)):
 
-    group_manager.delete_group(
-        groupID,
-        user_id
-    )
+    user_id = get_current_user(request)
+
+    if not user_id:
+        return RedirectResponse("/welcome", status_code=303)
+
+    group_manager.delete_group(groupID, user_id)
 
     return RedirectResponse(
         url="/modifygroup",
         status_code=HTTP_303_SEE_OTHER
     )
+
+@app.get("/logout")
+def logout(request: Request):
+    request.session.clear()
+    return RedirectResponse("/welcome", status_code=303)

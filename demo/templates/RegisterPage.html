@@ -6,7 +6,19 @@
     <title>Register for LittleWins!</title>
 </head>
 <body>
+
+    <form action="/welcome" method="get">
+    <button type="submit">Back to Login</button>
+        </form>
+
     <h2>Register for LittleWins!</h2>
+
+
+
+    {% if error %}
+    <p style="color:red;">{{ error }}</p>
+    {% endif %}
+
     <form action="/register" method="POST">
     <label for="new-username">Create Username:</label>
     <input id="new-username" name="Username" type="text">

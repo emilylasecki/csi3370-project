@@ -60,8 +60,10 @@ class GroupManager:
         if not group:
             raise Exception("Group not found")
 
-        if group["user_id"] != user_id:
+        if int(group["user_id"]) != int(user_id):
             raise Exception("Unauthorized")
+        
+        print(user_id)
 
         data = {
             "groupName": title,
@@ -73,6 +75,8 @@ class GroupManager:
             .update(data) \
             .eq("groupID", groupID) \
             .execute()
+        
+        print("Update response:", response.data)
 
         return response
     
