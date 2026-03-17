@@ -38,6 +38,12 @@ def get_current_user(request: Request):
 
 @app.get("/")
 def home(request: Request):
+
+    user_id = request.session.get("user_id")
+
+    if not user_id:
+        return RedirectResponse("/welcome", status_code=303)
+
     try:
         user_id = 1
         min_tasks_required = 5
