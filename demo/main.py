@@ -135,8 +135,6 @@ def welcome_signin(
                 "error": "Invalid username or password. Register if you don't have an account."
             }
         )
-
-    return RedirectResponse(url="/taskcreation", status_code=HTTP_303_SEE_OTHER)
     
     #User logs iin succesfully
     user = result.data[0]
@@ -208,7 +206,7 @@ def task_creation(request: Request):
         supabase
         .table("task_groups")
         .select("*")
-        .eq("user_id", 1)
+        .eq("user_id", user_id)
         .eq("user_id", user_id)   # TODO make this not hard coded
         .execute()
     ).data
@@ -234,7 +232,10 @@ def add_task_route(
     groupID: int = Form(...),
     is_habit: bool = Form(False)
 ):
-    userID = 1
+    user_id = get_current_user(request)
+
+    if not user_id:
+        return RedirectResponse("/welcome", status_code=303)
     """
     Create a task using TaskManager and redirect back to task creation page
     """
@@ -367,7 +368,10 @@ def create_group(
     color: str = Form(...),
     habit: str = Form(None)
 ):
-    user_id = 1
+    user_id = get_current_user(request)
+
+    if not user_id:
+        return RedirectResponse("/welcome", status_code=303)
 
     user_id = get_current_user(request)
 
@@ -387,7 +391,10 @@ def create_group(
 
 @app.get("/modifygroup")
 def modify_group(request: Request, groupID: int = 0):
-    user_id = 1
+    user_id = get_current_user(request)
+
+    if not user_id:
+        return RedirectResponse("/welcome", status_code=303)
     user_id = get_current_user(request)
 
     if not user_id:
@@ -417,7 +424,10 @@ def update_group_route(
     color: str = Form(...),
     habit: str = Form(None)
 ):
-    user_id = 1
+    user_id = get_current_user(request)
+
+    if not user_id:
+        return RedirectResponse("/welcome", status_code=303)
     """
     Update a group using GroupManager.
     """
@@ -446,8 +456,7 @@ def update_group_route(
 
 
 @app.post("/delete_group")
-def delete_group(groupID: int = Form(...)):
-    user_id = 1
+
 def delete_group(request: Request, groupID: int = Form(...)):
 
     user_id = get_current_user(request)
