@@ -188,6 +188,23 @@ def register_user(
                 "error": "Username already taken. Please choose a different one."
             }
         )
+    
+    existing_email = (
+    supabase
+    .table("users")
+    .select("*")
+    .eq("email", Email)
+    .execute()
+)
+
+    if len(existing_email.data) > 0:
+        return templates.TemplateResponse(
+            "RegisterPage.html",
+            {
+                "request": request,
+                "error": "Email already registered. Please use a different email."
+            }
+        )
 
     supabase.table("users").insert(
         {
