@@ -10,6 +10,7 @@ from starlette.status import HTTP_303_SEE_OTHER
 from enviornment import SUPABASE_KEY, SUPABASE_URL
 from datetime import datetime, date
 from starlette.middleware.sessions import SessionMiddleware
+import bcrypt
 
 import json
 
@@ -123,13 +124,13 @@ def welcome_signin(
                 "error": "Username and password cannot be empty."
             }
         )
-
+    
     result = (
         supabase
         .table("users")
         .select("*")
         .eq("username", Username)
-        .eq("password", password)
+        #.eq("password", password)  
         .execute()
     )
 
@@ -144,6 +145,15 @@ def welcome_signin(
     
     #User logs iin succesfully
     user = result.data[0]
+
+    if not bcrypt.checkpw(password.encode('utf-8'), user["password"].encode('utf-8')):
+        return templates.TemplateResponse(
+            "WelcomePage.html",
+            {
+                "request": request,
+                "error": "Invalid username or password. Register if you don't have an account."
+            }
+        )
 
     request.session["user_id"] = user["user_id"]
     request.session["username"] = user["username"]
@@ -161,9 +171,12 @@ def register_user(
     request: Request,
     Username: str = Form(...),
     Email: str = Form(...),
-    password: str = Form(...)
+    entry_password: str = Form(...),
+    
 ):
-    if Username.strip() == "" or Email.strip() == "" or password.strip() == "":
+    salt = bcrypt.gensalt()
+    hashed_password = bcrypt.hashpw(entry_password.encode('utf-8'), salt).decode('utf-8')
+    if Username.strip() == "" or Email.strip() == "" or entry_password.strip() == "":
         return templates.TemplateResponse(
             "RegisterPage.html",
             {
@@ -210,7 +223,7 @@ def register_user(
         {
             "username": Username,
             "email": Email,
-            "password": password
+            "password": hashed_password
         }
     ).execute()
 
