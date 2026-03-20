@@ -26,15 +26,21 @@
                     <input id="title" name="title" type="text" required>
                 </div>
 
-                <div>
-                    <label for="color">Color:</label><br>
-                    <select id="color" name="color">
-                        <option>Red</option>
-                        <option>Orange</option>
-                        <option>Yellow</option>
-                        <option>Green</option>
-                    </select>
-                </div>
+                <div class="box">
+<label>Color</label>
+<select name="color">
+<option value="DarkSalmon" {% if selected_group.color=="DarkSalmon" %}selected{% endif %}>Red</option>
+<option value="LightSalmon" {% if selected_group.color=="LightSalmon" %}selected{% endif %}>Orange</option>
+<option value="GoldenRod" {% if selected_group.color=="GoldenRod" %}selected{% endif %}>Gold</option>
+<option value="Khaki" {% if selected_group.color=="Khaki" %}selected{% endif %}>Yellow</option>
+<option value="LightGreen" {% if selected_group.color=="LightGreen" %}selected{% endif %}>Light Green</option>
+<option value="PowderBlue" {% if selected_group.color=="PowderBlue" %}selected{% endif %}>Light Blue</option>
+<option value="CornFlowerBlue" {% if selected_group.color=="CornFlowerBlue" %}selected{% endif %}>Dark Blue</option>
+<option value="Plum" {% if selected_group.color=="Plum" %}selected{% endif %}>Purple</option>
+<option value="MistyRose" {% if selected_group.color=="MistyRose" %}selected{% endif %}>Rose</option>
+<option value="LightPink" {% if selected_group.color=="LightPink" %}selected{% endif %}>Light Pink</option>
+</select>
+</div>
 
                 <div class="checkbox-entry">
                     <label for="habit">Habit:</label>

@@ -87,13 +87,6 @@ def home(request: Request):
             status_code=500
         )
 
-    user_id = request.session.get("user_id")
-
-    if not user_id:
-        return RedirectResponse("/welcome", status_code=303)
-    
-    return templates.TemplateResponse("index.html", {"request": request})
-
 @app.get("/groupedit")
 def group_edit(request: Request):
 
@@ -441,15 +434,25 @@ def wrapped_page(request: Request):
 
 @app.get("/groupcreation")
 def group_creation(request: Request):
-
     user_id = request.session.get("user_id")
 
     if not user_id:
         return RedirectResponse("/welcome", status_code=303)
+    
+    groups = group_manager.get_groups_for_user(user_id)
+
+    # Provide a default empty object so template doesn't break
+    selected_group = {
+        "color": ""  # default to empty string
+    }
 
     return templates.TemplateResponse(
         "GroupCreation.html",
-        {"request": request}
+        {
+            "request": request,
+            "groups": groups,
+            "selected_group": selected_group
+        }
     )
 
 
