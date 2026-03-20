@@ -38,7 +38,7 @@ class TaskManager:
         insert_data = {
             "taskName": new_task.taskName,
             "description": new_task.description,
-            "creationDate": new_task.creationDate,
+            "created_at": new_task.creationDate,
             "dueDate": new_task.dueDate,
             "status": new_task.status,
             "effortEstimation": new_task.effortEstimation,

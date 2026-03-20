@@ -302,9 +302,44 @@ def load_tasks():
 
 
 @app.get("/tasks")
-def get_tasks():
-    tasks = load_tasks()
-    return tasks
+def get_tasks(request: Request):
+    user_id = get_current_user(request)
+
+    if not user_id:
+        return []
+
+    result = (
+        supabase
+        .table("tasks")
+        .select("*")
+        .eq("userID", user_id)
+        .execute()
+    )
+
+    return result.data if result.data else []
+
+@app.post("/add_task_json")
+async def add_task_json(request: Request):
+    user_id = get_current_user(request)
+
+    if not user_id:
+        return {"error": "Not logged in"}
+
+    data = await request.json()
+
+    task = {
+        "taskName": data.get("taskName"),
+        "description": data.get("description"),
+        "dueDate": data.get("dueDate"),
+        "status": data.get("status"),
+        "priority": data.get("priority"),
+        "effort": data.get("effortEstimation"),
+        "userID": user_id
+    }
+
+    result = supabase.table("tasks").insert(task).execute()
+
+    return result.data
 
 
 @app.get("/analyze")
