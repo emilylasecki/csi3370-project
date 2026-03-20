@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Modify Task</title>
+    <style>
+        /* Optional: display the current value of the slider */
+        .slider-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Modify Task</h1>
+
+    <form action="/modify_task" method="post">
+        <input type="hidden" name="taskID" value="{{ task.task_id }}">
+
+        <label>Task Name:</label>
+        <input type="text" name="taskName" value="{{ task.taskName }}"><br><br>
+
+        <label>Description:</label>
+        <textarea name="description">{{ task.description }}</textarea><br><br>
+
+        <label>Due Date:</label>
+        <input type="date" name="dueDate" value="{{ task.dueDate }}"><br><br>
+
+        <label>Status:</label>
+        <select name="status">
+            <option value="Not Started" {% if task.status=="Not Started" %}selected{% endif %}>Not Started</option>
+            <option value="In Progress" {% if task.status=="In Progress" %}selected{% endif %}>In Progress</option>
+            <option value="Complete" {% if task.status=="Complete" %}selected{% endif %}>Complete</option>
+        </select><br><br>
+
+        <label>Priority:</label>
+        <div class="slider-container">
+            <input type="range" name="priority" min="0" max="5" value="{{ task.priority }}" id="prioritySlider">
+            <span id="priorityValue">{{ task.priority }}</span>
+        </div>
+        <br>
+
+        <label>Effort:</label>
+        <div class="slider-container">
+            <input type="range" name="effortEstimation" min="0" max="5" value="{{ task.effortEstimation }}" id="effortSlider">
+            <span id="effortValue">{{ task.effortEstimation }}</span>
+        </div>
+        <br>
+
+        <label>Group:</label>
+        <select name="groupID">
+            <option value="">None</option>
+            {% for group in groups %}
+            <option value="{{ group.groupID }}" {% if task.groupID==group.groupID %}selected{% endif %}>
+                {{ group.groupName }}
+            </option>
+            {% endfor %}
+        </select><br><br>
+
+        <button type="submit">Update Task</button>
+    </form>
+
+    <form action="/delete_task" method="post" style="margin-top:10px;">
+        <input type="hidden" name="taskID" value="{{ task.task_id }}">
+        <button type="submit" style="background:red; color:white;">Delete Task</button>
+    </form>
+
+    <script>
+    // Priority slider
+    const prioritySlider = document.getElementById("prioritySlider");
+    const priorityDisplay = document.getElementById("priorityValue");
+    prioritySlider.addEventListener("input", () => {
+        priorityDisplay.textContent = prioritySlider.value;
+    });
+
+    // Effort slider
+    const effortSlider = document.getElementById("effortSlider");
+    const effortDisplay = document.getElementById("effortValue");
+    effortSlider.addEventListener("input", () => {
+        effortDisplay.textContent = effortSlider.value;
+    });
+</script>
+</body>
+</html>

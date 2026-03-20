@@ -303,31 +303,36 @@ def load_tasks():
 
 from fastapi import Request  # make sure Request is imported
 
+from fastapi import Request
+
 @app.get("/tasks")
 def get_tasks(request: Request):
-    user_id = get_current_user(request)  # pass the Request object properly
+    user_id = get_current_user(request)  # Pass request to get session user
 
     if not user_id:
-        # fallback for testing only; remove in production
-        user_id = 1
+        user_id = 1  # fallback for testing only
 
     try:
-        # Fetch tasks and include group info (is_habit)
+        # Fetch tasks and include habit and color from task_groups
         tasks_result = (
             supabase
             .table("tasks")
-            .select("*, task_groups(is_habit)")
+            .select("*, task_groups(is_habit,color)")
             .eq("userID", user_id)
             .execute()
         )
 
         tasks = tasks_result.data or []
 
-        # Add a top-level habit field for JS convenience
+        # Add top-level habit and color fields for JS convenience
         for task in tasks:
             task['habit'] = False
+            task['group_color'] = "#ffffff"  # default white
+
             if task.get("groupID") and task.get("task_groups"):
-                task['habit'] = task["task_groups"].get("is_habit", False)
+                group = task["task_groups"]
+                task['habit'] = group.get("is_habit", False)
+                task['group_color'] = group.get("color", "#ffffff")
 
         return tasks
 
@@ -562,3 +567,65 @@ def delete_group(request: Request, groupID: int = Form(...)):
 def logout(request: Request):
     request.session.clear()
     return RedirectResponse("/welcome", status_code=303)
+
+@app.get("/modify_task")
+def modify_task_page(request: Request, taskID: int):
+    user_id = get_current_user(request)
+    if not user_id:
+        return RedirectResponse("/welcome", status_code=303)
+
+    task = task_manager.get_task(taskID)
+    if not task:
+        return HTMLResponse("Task not found", status_code=404)
+
+    # Fetch groups for dropdown
+    groups = group_manager.get_groups_for_user(user_id)
+
+    return templates.TemplateResponse(
+        "ModifyTask.html",
+        {
+            "request": request,
+            "task": task,
+            "groups": groups
+        }
+    )
+
+@app.post("/modify_task")
+def modify_task_submit(
+    request: Request,
+    taskID: int = Form(...),
+    taskName: str = Form(...),
+    description: str = Form(...),
+    dueDate: str = Form(...),
+    status: str = Form(...),
+    priority: int = Form(...),
+    effortEstimation: int = Form(...),
+    groupID: int = Form(None)
+):
+    user_id = get_current_user(request)
+    if not user_id:
+        return RedirectResponse("/welcome", status_code=303)
+
+    updates = {
+        "taskName": taskName,
+        "description": description,
+        "dueDate": dueDate,
+        "status": status,
+        "priority": priority,
+        "effortEstimation": effortEstimation,
+        "groupID": groupID
+    }
+
+    task_manager.update_task(taskID, updates, user_id)
+
+    return RedirectResponse(url="/?success=3", status_code=303)
+
+
+@app.post("/delete_task")
+def delete_task_route(request: Request, taskID: int = Form(...)):
+    user_id = get_current_user(request)
+    if not user_id:
+        return RedirectResponse("/welcome", status_code=303)
+
+    task_manager.delete_task(taskID, user_id)
+    return RedirectResponse(url="/?success=4", status_code=303)

@@ -1,8 +1,6 @@
 console.log("index.js loaded");
 
 async function fetchTasks() {
-    console.log("Fetching tasks...");
-
     try {
         const response = await fetch("/tasks");
         if (!response.ok) throw new Error("Failed to fetch tasks");
@@ -32,6 +30,7 @@ function displayTasks(tasks) {
     tasks.forEach(task => {
         const dt = document.createElement("dt");
         dt.textContent = task.taskName || "No title";
+        dt.style.backgroundColor = task.group_color || "#ffffff";
 
         const dd = document.createElement("dd");
         dd.textContent =
@@ -40,19 +39,19 @@ function displayTasks(tasks) {
             " [" + (task.status || "") + "]" +
             " [" + (task.effortEstimation || "") + "]" +
             " [" + (task.priority || "") + "]";
+        dd.style.backgroundColor = task.group_color || "#ffffff";
 
         const modifyBtn = document.createElement("button");
         modifyBtn.textContent = "Modify";
         modifyBtn.style.marginLeft = "10px";
 
         modifyBtn.addEventListener("click", () => {
-            console.log("Modify clicked for task:", task);
-            // later: open modification form
-        });
+    // Redirect to modify page with taskID
+    window.location.href = `/modify_task?taskID=${task.task_id}`;
+});
 
         dd.appendChild(modifyBtn);
 
-        // Use the new task.habit field
         if (task.habit) {
             habitsDL.appendChild(dt);
             habitsDL.appendChild(dd);
