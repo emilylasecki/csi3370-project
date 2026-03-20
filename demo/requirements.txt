@@ -6,3 +6,4 @@ supabase
 dotenv
 python-multipart
 flask-cors
+bcrypt
