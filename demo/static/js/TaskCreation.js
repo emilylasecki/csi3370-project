@@ -1,58 +1,15 @@
-console.log("JavaScript file is connected and running!");
+console.log("taskcreation.js loaded");
 
-document.querySelector("form[action='/add_task']").addEventListener("submit", function (e) {
-    e.preventDefault();
+// DO NOTHING special — let the form submit normally
+document.addEventListener("DOMContentLoaded", () => {
+    const form = document.querySelector("form[action='/add_task']");
 
-    const taskTitle = document.getElementById("title").value;
-    const taskDesc = document.getElementById("description").value;
-    const taskStatus = document.getElementById("status").value;
-    const taskDueDate = document.getElementById("due").value;
-    const taskPriority = document.getElementById("priority").value;
-    const taskEffort = document.getElementById("effort").value;
+    if (!form) return;
 
-    console.log(taskTitle);
- 
-    if (!taskTitle || !taskDesc || !taskDueDate) return;
- 
-    // const tasks = JSON.parse(localStorage.getItem("tasks") || "[]");
-    // tasks.push({ taskTitle, taskDesc, taskStatus, taskDueDate, taskPriority, taskEffort });
-    // localStorage.setItem("tasks", JSON.stringify(tasks)); 
-
-    saveTask({
-      title: taskTitle,
-      description: taskDesc,
-      status: taskStatus,
-      dueDate: taskDueDate,
-      priority: taskPriority,
-      effort: taskEffort
+    form.addEventListener("submit", () => {
+        console.log("Form submitted to backend");
+        // no preventDefault
+        // no localStorage
+        // backend handles everything
     });
-
-    window.location.href = "/";
-
-    function saveTask(task) { //Save locally
-    const tasks = JSON.parse(localStorage.getItem("tasks") || "[]");
-    tasks.push(task);
-    localStorage.setItem("tasks", JSON.stringify(tasks));
-
-    // fetch("/add_task_json", {
-    //     method: "POST",
-    //     headers: { "Content-Type": "application/json" },
-    //     body: JSON.stringify(task)
-    // })
-    // .then(res => res.json())
-    // .then(data => console.log("Saved to JSON:", data))
-    // .catch(err => console.error(err))
-    
-    console.log("Saved task:", task);
-    }
-
-    // Hopefully, save to database
-    // async function saveTask(task) {
-    // const { data, error } = await supabase
-    //     .from("tasks")
-    //     .insert([task]);
-
-    // if (error) console.error(error);
-    // }
 });
-
