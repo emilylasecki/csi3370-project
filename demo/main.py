@@ -301,22 +301,38 @@ def load_tasks():
         return json.load(file)
 
 
+from fastapi import Request  # make sure Request is imported
+
 @app.get("/tasks")
 def get_tasks(request: Request):
-    user_id = get_current_user(request)
+    user_id = get_current_user(request)  # pass the Request object properly
 
     if not user_id:
-        return []
+        # fallback for testing only; remove in production
+        user_id = 1
 
-    result = (
-        supabase
-        .table("tasks")
-        .select("*")
-        .eq("userID", user_id)
-        .execute()
-    )
+    try:
+        # Fetch tasks and include group info (is_habit)
+        tasks_result = (
+            supabase
+            .table("tasks")
+            .select("*, task_groups(is_habit)")
+            .eq("userID", user_id)
+            .execute()
+        )
 
-    return result.data if result.data else []
+        tasks = tasks_result.data or []
+
+        # Add a top-level habit field for JS convenience
+        for task in tasks:
+            task['habit'] = False
+            if task.get("groupID") and task.get("task_groups"):
+                task['habit'] = task["task_groups"].get("is_habit", False)
+
+        return tasks
+
+    except Exception as e:
+        return {"error": str(e)}
 
 @app.post("/add_task_json")
 async def add_task_json(request: Request):

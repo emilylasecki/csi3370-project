@@ -1,17 +1,11 @@
 console.log("index.js loaded");
 
-// =========================
-// FETCH TASKS FROM BACKEND
-// =========================
 async function fetchTasks() {
     console.log("Fetching tasks...");
 
     try {
         const response = await fetch("/tasks");
-
-        if (!response.ok) {
-            throw new Error("Failed to fetch tasks");
-        }
+        if (!response.ok) throw new Error("Failed to fetch tasks");
 
         const tasks = await response.json();
         console.log("Tasks received:", tasks);
@@ -23,20 +17,17 @@ async function fetchTasks() {
     }
 }
 
-
-// =========================
-// DISPLAY TASKS
-// =========================
 function displayTasks(tasks) {
-    const dl = document.querySelector("#tasks dl");
+    const tasksDL = document.querySelector("#tasks dl");
+    const habitsDL = document.querySelector("#habits dl");
 
-    if (!dl) {
-        console.error("No <dl> found inside #tasks");
+    if (!tasksDL || !habitsDL) {
+        console.error("Missing #tasks or #habits container");
         return;
     }
 
-    // Clear placeholder content
-    dl.innerHTML = "";
+    tasksDL.innerHTML = "";
+    habitsDL.innerHTML = "";
 
     tasks.forEach(task => {
         const dt = document.createElement("dt");
@@ -50,13 +41,27 @@ function displayTasks(tasks) {
             " [" + (task.effortEstimation || "") + "]" +
             " [" + (task.priority || "") + "]";
 
-        dl.appendChild(dt);
-        dl.appendChild(dd);
+        const modifyBtn = document.createElement("button");
+        modifyBtn.textContent = "Modify";
+        modifyBtn.style.marginLeft = "10px";
+
+        modifyBtn.addEventListener("click", () => {
+            console.log("Modify clicked for task:", task);
+            // later: open modification form
+        });
+
+        dd.appendChild(modifyBtn);
+
+        // Use the new task.habit field
+        if (task.habit) {
+            habitsDL.appendChild(dt);
+            habitsDL.appendChild(dd);
+        } else {
+            tasksDL.appendChild(dt);
+            tasksDL.appendChild(dd);
+        }
     });
 }
 
-
-// =========================
-// RUN ON PAGE LOAD
-// =========================
+// Run on page load
 fetchTasks();
