@@ -39,10 +39,18 @@
             <h1>Your Wins</h1>
 
             <div id="actions">
-                <span id="spaceSpan">Filter</span>
-                <span>Sort <button>&#8595</button></span>
+                <div id="filter-container">
+                    <button hidden id="filterBtn">Filter ⏷</button>
+                    <label> Filters: </label>
+                    <div id="filterMenu" class="hidden">
+                        <button data-filter="priority">Priority (High → Low)</button>
+                        <button data-filter="due">Due Date (Soonest)</button>
+                        <button data-filter="effort">Effort (Low → High)</button>
+                    </div>
+                </div>
             </div>
         </div>
+
 
         <div id="tasks">
     <img src="/static/images/CheckSquare.png" id="icon">
