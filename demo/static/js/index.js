@@ -19,39 +19,82 @@ function displayTasks(tasks) {
     const tasksDL = document.querySelector("#tasks dl");
     const habitsDL = document.querySelector("#habits dl");
 
-    if (!tasksDL || !habitsDL) {
-        console.error("Missing #tasks or #habits container");
-        return;
-    }
-
     tasksDL.innerHTML = "";
     habitsDL.innerHTML = "";
 
-    tasks.forEach(task => {
-        const dt = document.createElement("dt");
-        dt.textContent = task.taskName || "No title";
-        dt.style.backgroundColor = task.group_color || "#ffffff";
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); // normalize
 
+    tasks.forEach(task => {
+        const dueDate = task.dueDate ? new Date(task.dueDate) : null;
+        if (dueDate) dueDate.setHours(0, 0, 0, 0); // normalize
+
+        // ❌ SKIP: completed AND overdue
+        if (
+            task.status === "Complete" &&
+            dueDate &&
+            dueDate < today
+        ) {
+            return;
+        }
+
+        const dt = document.createElement("dt");
         const dd = document.createElement("dd");
+
+        dt.style.backgroundColor = task.group_color || "#ffffff";
+        dd.style.backgroundColor = task.group_color || "#ffffff";
+
+        // Base text
+        dt.textContent = task.taskName || "No title";
+
         dd.textContent =
             (task.description || "") +
             " — Due: " + (task.dueDate || "") +
             " [" + (task.status || "") + "]" +
             " [" + (task.effortEstimation || "") + "]" +
             " [" + (task.priority || "") + "]";
-        dd.style.backgroundColor = task.group_color || "#ffffff";
 
+        // =========================
+        // STATUS LOGIC (FIXED)
+        // =========================
+
+        // ✅ Completed (only non-overdue reach here)
+        if (task.status === "Complete") {
+            dt.style.textDecoration = "line-through";
+            dd.style.textDecoration = "line-through";
+            dt.style.opacity = "0.6";
+            dd.style.opacity = "0.6";
+        }
+
+        // ⚠️ Overdue (only if NOT complete)
+        else if (
+            dueDate &&
+            dueDate < today
+        ) {
+            const warning = document.createElement("span");
+            warning.textContent = " ⚠️ OVERDUE";
+            warning.style.color = "red";
+            warning.style.fontWeight = "bold";
+
+            dt.appendChild(warning);
+        }
+
+        // =========================
+        // MODIFY BUTTON
+        // =========================
         const modifyBtn = document.createElement("button");
         modifyBtn.textContent = "Modify";
         modifyBtn.style.marginLeft = "10px";
 
         modifyBtn.addEventListener("click", () => {
-    // Redirect to modify page with taskID
-    window.location.href = `/modify_task?taskID=${task.task_id}`;
-});
+            window.location.href = `/modify_task?taskID=${task.task_id}`;
+        });
 
         dd.appendChild(modifyBtn);
 
+        // =========================
+        // APPEND TO CORRECT SECTION
+        // =========================
         if (task.habit) {
             habitsDL.appendChild(dt);
             habitsDL.appendChild(dd);
@@ -61,6 +104,5 @@ function displayTasks(tasks) {
         }
     });
 }
-
 // Run on page load
 fetchTasks();
