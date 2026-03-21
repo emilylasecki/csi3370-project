@@ -40,19 +40,29 @@ function displayTasks(tasks) {
 
         const dt = document.createElement("dt");
         const dd = document.createElement("dd");
+        const spacer = document.createElement("spacer");
 
         dt.style.backgroundColor = task.group_color || "#ffffff";
         dd.style.backgroundColor = task.group_color || "#ffffff";
 
         // Base text
         dt.textContent = task.taskName || "No title";
+        spacer.textContent = " ";
+
+        const status = task.status || "Not Started";
+        const priority = (task.priority !== null && task.priority !== undefined && task.priority !== "")
+            ? task.priority
+            : 0;
+        const effort = (task.effortEstimation !== null && task.effortEstimation !== undefined && task.effortEstimation !== "")
+            ? task.effortEstimation
+            : 0;
 
         dd.textContent =
             (task.description || "") +
             " — Due: " + (task.dueDate || "") +
-            " [" + (task.status || "") + "]" +
-            " [" + (task.effortEstimation || "") + "]" +
-            " [" + (task.priority || "") + "]";
+            " | Status: " + status +
+            " | Priority: " + priority +
+            " | Effort: " + effort;
 
         // =========================
         // STATUS LOGIC (FIXED)
