@@ -65,7 +65,52 @@ spacer {
     padding-top: 5px;
 }
 
+/* Container alignment */
+.filter-label {
+    margin-right: 8px;
+    font-weight: bold;
+    color: #333;
+}
 
+.filter-dropdown {
+    padding: 5px 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #fff;
+    color: #333;
+    font-size: 14px;
+    cursor: pointer;
+
+    /* Remove default arrow (WebKit) */
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+
+    /* Optional shadow for nicer dropdown */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Optional: container with arrow indicator */
+.filter-dropdown-container {
+    position: relative;
+    display: inline-block;
+}
+
+.filter-dropdown-container::after {
+    content: "▼";
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+    font-size: 10px;
+    color: #555;
+}
+
+/* Align select and label nicely */
+#filterSelect {
+    min-width: 120px; /* adjust width */
+}
 
 
 #wrapped {
