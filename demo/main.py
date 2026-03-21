@@ -136,7 +136,7 @@ def welcome_signin(
             }
         )
     
-    #User logs iin succesfully
+    #User logs in succesfully
     user = result.data[0]
 
     if not bcrypt.checkpw(password.encode('utf-8'), user["password"].encode('utf-8')):
@@ -164,12 +164,14 @@ def register_user(
     request: Request,
     Username: str = Form(...),
     Email: str = Form(...),
+    Question: str = Form(...),
     entry_password: str = Form(...),
     
 ):
     salt = bcrypt.gensalt()
     hashed_password = bcrypt.hashpw(entry_password.encode('utf-8'), salt).decode('utf-8')
-    if Username.strip() == "" or Email.strip() == "" or entry_password.strip() == "":
+    hashed_security_answer = bcrypt.hashpw(Question.encode('utf-8'), salt).decode('utf-8')
+    if Username.strip() == "" or Email.strip() == "" or Question.strip() == "" or entry_password.strip() == "":
         return templates.TemplateResponse(
             "RegisterPage.html",
             {
@@ -216,12 +218,63 @@ def register_user(
         {
             "username": Username,
             "email": Email,
+            "security_question": hashed_security_answer,
             "password": hashed_password
         }
     ).execute()
 
     return RedirectResponse(url="/welcome?registered=1", status_code=HTTP_303_SEE_OTHER)
 
+@app.get("/reset-password")
+def reset_password_page(request: Request):
+    return templates.TemplateResponse("NewPasswordPage.html", {"request": request})
+
+@app.post("/reset-password")
+def reset_password(
+    request: Request,
+    Username: str = Form(...),
+    Email: str = Form(...),
+    Question: str = Form(...),
+    new_password: str = Form(...)
+):
+    salt = bcrypt.gensalt()
+    hashed_password = bcrypt.hashpw(new_password.encode('utf-8'), salt).decode('utf-8')
+
+    user_result = (
+        supabase
+        .table("users")
+        .select("*")
+        .eq("username", Username)
+        .eq("email", Email)
+        #.eq("security_question", Question)
+        .execute()
+    )
+
+    if len(user_result.data) == 0:
+        return templates.TemplateResponse(
+            "NewPasswordPage.html",
+            {
+                "request": request,
+                "error": "No matching user found with provided information."
+            }
+        )
+
+    user_id = user_result.data[0]["user_id"]
+
+    if not bcrypt.checkpw(Question.encode('utf-8'), user_result.data[0]["security_question"].encode('utf-8')):
+        return templates.TemplateResponse(
+            "NewPasswordPage.html",
+            {
+                "request": request,
+                "error": "Security question answer is incorrect."
+            }
+        )
+
+    supabase.table("users").update(
+        {"password": hashed_password}
+    ).eq("user_id", user_id).execute()
+
+    return RedirectResponse(url="/welcome?password_reset=1", status_code=HTTP_303_SEE_OTHER)
 
 @app.get("/taskcreation")
 def task_creation(request: Request):
