@@ -30,11 +30,22 @@ label {
   margin-bottom: 6px;
 }
 
-.text-entry{
+.slider-container{
+  display: flex;
+  flex-direction: row;
+  border: 1px solid darkgrey;
+  border-radius: 12px;
+  padding: 12px;
+  margin-bottom: 15px;
+  align-items: center;
+} 
+
+#taskName, #desc{
   display: flex;
   flex-direction: column;
   margin-bottom: 16px;
 }
+
 
 input[type="text"],
 input[type="date"],
@@ -46,39 +57,14 @@ select {
   font-size: 13px;
 }
 
-input[type="range"] {
-  margin-top: 8px;
-}
-
-#selectors{
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  margin-bottom: 20px;
-}
-
-.box{
-  display: inline-block;
-}
-
-#sliders-container{
+#sliders{
   display: flex;
   flex-direction: row;
   gap: 16px;
   margin-bottom: 20px;
 }
- 
-.slider-box{
-  display: flex;
-  flex-direction: column;
-  border: 1px solid darkgrey;
-  border-radius: 12px;
-  padding: 12px;
-  margin-bottom: 15px;
-} 
 
 .label-sliders{
   flex-direction: column;
   flex: 1;
 }
-

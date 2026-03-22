@@ -20,7 +20,7 @@
             <form action="/add_task" method="POST">
 
                 <div class="text-entry">
-                    <label for="title">Title: </label>
+                    <label for="title">Task Name: </label>
                     <input id="title" name="taskName" type="text" required>
                 </div>
 
@@ -44,6 +44,11 @@
                     </div>
 
                     <div class="box">
+                        <label for="due">Due:</label><br>
+                        <input type="date" id="due" name="dueDate" required>
+                    </div>
+
+                    <div class="box">
                         <label for="status">Status:</label><br>
                         <select id="status" name="status">
                             <option value="Not Started">Not Started</option>
@@ -51,22 +56,23 @@
                             <option value="Complete">Complete</option>
                         </select>
                     </div>
-
-                    <div class="box">
-                        <label for="due">Due:</label><br>
-                        <input type="date" id="due" name="dueDate" required>
-                    </div>
+                    
                 </div>
 
-                <div id="sliders">
-                    <div class="slider-box">
+                <div id="sliders-container">
+                    <div class="label-sliders">
                         <label for="priority">Priority:</label>
-                        <input id="priority" type="range" min="0" max="5" value="0" name="priority">
+                        <div class="slider-box">
+                            <input id="priority" type="range" min="0" max="5" value="0" name="priority">
+                            
+                        </div>
                     </div>
 
-                    <div class="slider-box">
+                    <div class="label-sliders">
                         <label for="effort">Effort Estimation:</label>
-                        <input id="effort" type="range" min="0" max="5" value="0" name="effort">
+                        <div class="slider-box">
+                            <input id="effort" type="range" min="0" max="5" value="0" name="effort">
+                        </div>
                     </div>
                 </div>
 
@@ -79,6 +85,7 @@
 
         </div>
         <script src="/static/js/taskCreation.js"></script>
+        
         
     </body>
 </html>

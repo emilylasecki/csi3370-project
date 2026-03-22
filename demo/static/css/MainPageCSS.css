@@ -66,6 +66,7 @@ dd button {
     padding: 3px 8px;
     position: absolute;
     right: 35px;
+    background-color: whitesmoke !important;
 }
 
 /*spacer {
