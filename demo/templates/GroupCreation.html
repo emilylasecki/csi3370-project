@@ -4,20 +4,18 @@
     <head>
         <meta charset="utf-8">
         <title>New Group</title>
-        <link rel="stylesheet" href="/static/css/GroupEdit.css">
+        <link rel="stylesheet" href="/static/css/GroupCreation.css">
     </head>
 
     <body>
+
         <div id="container">
-
             <form action="/" method="get">
-    <button type="submit">Home</button>
-        </form>
+                <button type="submit">Home</button>
+            </form>
 
-            <header>
-                <h2>Group Creation</h2>
-                <img src="static/images/Info.png" alt="WHY">
-            </header>
+
+            <h1>New Group</h1>
 
             <form method="post" action="/create_group">
 
@@ -27,20 +25,20 @@
                 </div>
 
                 <div class="box">
-<label>Color</label>
-<select name="color">
-<option value="DarkSalmon" {% if selected_group.color=="DarkSalmon" %}selected{% endif %}>Red</option>
-<option value="LightSalmon" {% if selected_group.color=="LightSalmon" %}selected{% endif %}>Orange</option>
-<option value="GoldenRod" {% if selected_group.color=="GoldenRod" %}selected{% endif %}>Gold</option>
-<option value="Khaki" {% if selected_group.color=="Khaki" %}selected{% endif %}>Yellow</option>
-<option value="LightGreen" {% if selected_group.color=="LightGreen" %}selected{% endif %}>Light Green</option>
-<option value="PowderBlue" {% if selected_group.color=="PowderBlue" %}selected{% endif %}>Light Blue</option>
-<option value="CornFlowerBlue" {% if selected_group.color=="CornFlowerBlue" %}selected{% endif %}>Dark Blue</option>
-<option value="Plum" {% if selected_group.color=="Plum" %}selected{% endif %}>Purple</option>
-<option value="MistyRose" {% if selected_group.color=="MistyRose" %}selected{% endif %}>Rose</option>
-<option value="LightPink" {% if selected_group.color=="LightPink" %}selected{% endif %}>Light Pink</option>
-</select>
-</div>
+                    <label>Color</label>
+                    <select name="color">
+                        <option value="DarkSalmon" {% if selected_group.color=="DarkSalmon" %}selected{% endif %}>Red</option>
+                        <option value="LightSalmon" {% if selected_group.color=="LightSalmon" %}selected{% endif %}>Orange</option>
+                        <option value="GoldenRod" {% if selected_group.color=="GoldenRod" %}selected{% endif %}>Gold</option>
+                        <option value="Khaki" {% if selected_group.color=="Khaki" %}selected{% endif %}>Yellow</option>
+                        <option value="LightGreen" {% if selected_group.color=="LightGreen" %}selected{% endif %}>Light Green</option>
+                        <option value="PowderBlue" {% if selected_group.color=="PowderBlue" %}selected{% endif %}>Light Blue</option>
+                        <option value="CornFlowerBlue" {% if selected_group.color=="CornFlowerBlue" %}selected{% endif %}>Dark Blue</option>
+                        <option value="Plum" {% if selected_group.color=="Plum" %}selected{% endif %}>Purple</option>
+                        <option value="MistyRose" {% if selected_group.color=="MistyRose" %}selected{% endif %}>Rose</option>
+                        <option value="LightPink" {% if selected_group.color=="LightPink" %}selected{% endif %}>Light Pink</option>
+                    </select>
+                </div>
 
                 <div class="checkbox-entry">
                     <label for="habit">Habit:</label>
