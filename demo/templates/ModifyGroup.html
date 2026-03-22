@@ -3,107 +3,94 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Modify Groups</title>
-    <link rel="stylesheet" href="/static/css/MainPageCSS.css">
+    <title>Modify Group</title>
+    <link rel="stylesheet" href="/static/css/ModifyGroup.css">
 </head>
 
-<body>
-
-    <form action="/" method="get">
-    <button type="submit">Home</button>
-        </form>
-
-<div id="selectors">
-
-<!-- GROUP SELECT -->
-<form method="get" action="/modifygroup">
-<div class="box">
-
-<select name="groupID" onchange="this.form.submit()">
-
-<option value="0">Select Group</option>
-
-{% for group in groups %}
-<option value="{{ group.groupID }}"
-{% if selected_group and group.groupID == selected_group.groupID %}
-selected
-{% endif %}
->
-{{ group.groupName }}
-</option>
-{% endfor %}
-
-</select>
-
-</div>
-</form>
+    <body>
 
 
-{% if selected_group %}
+        <div id="container">
+                        
+            <form action="/" method="get">
+                <button type="submit">Home</button>
+            </form>
 
-<!-- GROUP INFO -->
-<div class="box">
-
-<p><strong>Name:</strong> {{ selected_group.groupName }}</p>
-<p><strong>Color:</strong> {{ selected_group.color }}</p>
-<p><strong>Habit:</strong> {{ selected_group.is_habit }}</p>
-
-</div>
+            <h1>Modify Group</h1>
 
 
-<!-- UPDATE GROUP -->
-<form method="post" action="/update_group">
+            <!-- GROUP SELECT -->
+            <form method="get" action="/modifygroup">
+                <div class="box">
+                    <select name="groupID" onchange="this.form.submit()">
+                        <option value="0">Select Group</option>
+                        {% for group in groups %}
+                        <option value="{{ group.groupID }}"
+                        {% if selected_group and group.groupID == selected_group.groupID %}
+                        selected
+                        {% endif %}
+                        >
+                        {{ group.groupName }}
+                        </option>
+                    {% endfor %}
 
-<input type="hidden" name="groupID" value="{{ selected_group.groupID }}">
+                    </select>
+                </div>
+            </form>
 
-<div class="box">
-<label>Title</label>
-<input type="text" name="title" value="{{ selected_group.groupName }}">
-</div>
+            {% if selected_group %}
 
-<div class="box">
-<label>Color</label>
-<select name="color">
+            <!-- GROUP INFO -->
+            <div id="group-info">
+                <p><strong>Name:</strong> {{ selected_group.groupName }}</p>
+                <p><strong>Color:</strong> {{ selected_group.color }}</p>
+                <p><strong>Habit:</strong> {{ selected_group.is_habit }}</p>
+            </div>
 
-<option value="DarkSalmon" {% if selected_group.color=="DarkSalmon" %}selected{% endif %}>Red</option>
-<option value="LightSalmon" {% if selected_group.color=="LightSalmon" %}selected{% endif %}>Orange</option>
-<option value="GoldenRod" {% if selected_group.color=="GoldenRod" %}selected{% endif %}>Gold</option>
-<option value="Khaki" {% if selected_group.color=="Khaki" %}selected{% endif %}>Yellow</option>
-<option value="LightGreen" {% if selected_group.color=="LightGreen" %}selected{% endif %}>Light Green</option>
-<option value="PowderBlue" {% if selected_group.color=="PowderBlue" %}selected{% endif %}>Light Blue</option>
-<option value="CornFlowerBlue" {% if selected_group.color=="CornFlowerBlue" %}selected{% endif %}>Dark Blue</option>
-<option value="Plum" {% if selected_group.color=="Plum" %}selected{% endif %}>Purple</option>
-<option value="MistyRose" {% if selected_group.color=="MistyRose" %}selected{% endif %}>Rose</option>
-<option value="LightPink" {% if selected_group.color=="LightPink" %}selected{% endif %}>Light Pink</option>
+            <!-- UPDATE GROUP -->
+            <form method="post" action="/update_group">
+                <input type="hidden" name="groupID" value="{{ selected_group.groupID }}">
+                
+                <div class="text-entry">
+                    <label for="title">Title:</label>
+                    <input type="text" id="title" value="{{ selected_group.groupName }}">
+                </div>
 
-</select>
-</div>
+                <div class="box">
+                    <label for="select-color">Color:</label>
+                    <select id="select-color">
+                        <option value="DarkSalmon" {% if selected_group.color=="DarkSalmon" %}selected{% endif %}>Red</option>
+                        <option value="LightSalmon" {% if selected_group.color=="LightSalmon" %}selected{% endif %}>Orange</option>
+                        <option value="GoldenRod" {% if selected_group.color=="GoldenRod" %}selected{% endif %}>Gold</option>
+                        <option value="Khaki" {% if selected_group.color=="Khaki" %}selected{% endif %}>Yellow</option>
+                        <option value="LightGreen" {% if selected_group.color=="LightGreen" %}selected{% endif %}>Light Green</option>
+                        <option value="PowderBlue" {% if selected_group.color=="PowderBlue" %}selected{% endif %}>Light Blue</option>
+                        <option value="CornFlowerBlue" {% if selected_group.color=="CornFlowerBlue" %}selected{% endif %}>Dark Blue</option>
+                        <option value="Plum" {% if selected_group.color=="Plum" %}selected{% endif %}>Purple</option>
+                        <option value="MistyRose" {% if selected_group.color=="MistyRose" %}selected{% endif %}>Rose</option>
+                        <option value="LightPink" {% if selected_group.color=="LightPink" %}selected{% endif %}>Light Pink</option>
+                    </select>
+                </div>
 
-<div class="box">
-<label>Habit</label>
-<input type="checkbox" name="habit"
-{% if selected_group.is_habit %}checked{% endif %}>
-</div>
+                <div class="checkbox-entry">
+                    <label for="habit">Habit?</label>
+                    <input type="checkbox" id="habit"
+                    {% if selected_group.is_habit %}checked{% endif %}>
+                </div>
 
-<button type="submit">Update Group</button>
+                <button type="submit" id="update-group">Update Group</button>
 
-</form>
+            </form>
 
 
-<!-- DELETE GROUP -->
-<form method="post" action="/delete_group">
+            <!-- DELETE GROUP -->
+            <form method="post" action="/delete_group">
+                <input type="hidden" name="groupID" value="{{ selected_group.groupID }}">
+                <button type="submit" style="background:red;color:white;">Delete Group</button>
+            </form>
+            {% endif %}
 
-<input type="hidden" name="groupID" value="{{ selected_group.groupID }}">
+        </div>
 
-<button type="submit" style="background:red;color:white;">
-Delete Group
-</button>
-
-</form>
-
-{% endif %}
-
-</div>
-
-</body>
+    </body>
 </html>

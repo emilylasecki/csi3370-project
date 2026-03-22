@@ -1,0 +1,50 @@
+body{
+  padding: 40px;
+  display: flex;
+  justify-content: center;
+  gap: 32px;
+}
+
+button{
+  background-color: lightblue;
+  color: black;
+  border-color: darkgray;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+#container{
+  background: #e5e5e5;
+  border-radius: 24px;
+  padding: 16px;
+  width: 400px;
+}
+
+input[type="text"],
+select {
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+}
+
+.checkbox-entry{
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.text-entry{
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 16px;
+}
+
+label {
+  font-size: 14px;
+  color: #444;
+  margin-bottom: 6px;
+}
+
+#update-group{
+    margin-bottom: 10px;
+}
