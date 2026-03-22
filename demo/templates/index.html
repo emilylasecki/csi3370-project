@@ -6,32 +6,33 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Little Wins</title>
 </head>
+
 <body>
 
     <div id="list-container"> 
 
         <div id="createdTask" style="display:none; background:#d4edda; padding:10px;">
-        Task created successfully!
+            Task created successfully!
         </div>
 
         <div id="createdGroup" style="display:none; background:#d4edda; padding:10px;">
-        Group created successfully!
+            Group created successfully!
         </div>
 
         <script>
-        const params = new URLSearchParams(window.location.search);
+            const params = new URLSearchParams(window.location.search);
 
-        if (params.get("success") === "1") {
-            document.getElementById("createdTask").style.display = "block";
-        }
+            if (params.get("success") === "1") {
+                document.getElementById("createdTask").style.display = "block";
+            }
 
-        if (params.get("success") === "2") {
-            document.getElementById("createdGroup").style.display = "block";
-        }
+            if (params.get("success") === "2") {
+                document.getElementById("createdGroup").style.display = "block";
+            }
         </script>
 
         <form action="/logout" method="get">
-    <button type="submit">Logout</button>
+            <button type="submit" id="logout">Logout</button>
         </form>
 
 
@@ -53,40 +54,48 @@
 
 
         <div id="tasks">
-    <img src="/static/images/CheckSquare.png" id="icon">
-    <dl></dl>
-</div>
+            <img src="/static/images/CheckSquare.png" id="icon">
+            <dl></dl>
+        </div>
 
-<div id="habits">
-    <img src="/static/images/Award.png" id="image">
-    <dl></dl>
-</div>
+        <div id="habits">
+            <img src="/static/images/Award.png" id="icon">
+            <dl></dl>
+        </div>
 
+        
         <a href="/taskcreation">
             <button>Add Task</button> 
         </a>
+        
+        <div id="groupButtons">
+            <a href="/groupcreation">
+                <button>Add Group</button> 
+            </a>
 
-        <a href="/groupcreation">
-            <button>Add Group</button> 
-        </a>
+            <a href="/modifygroup">
+                <button>Modify Group</button> 
+            </a>
+        </div>
 
-        <a href="/modifygroup">
-            <button>Modify Group</button> 
-        </a>
+        <div id="wrapped">
+            <a href="/wrapped" id="wrappedLink">
+                <img src="/static/images/gift.png" id="wrappedIcon" alt="Wrap gift">
+
+                {% if wrap_ready %}
+                    <p>Wrap it up!</p>
+                {% else %}
+                    <p>Collecting wins...</p>
+                {% endif %}
+            </a>
+        </div>
 
     </div>
 
-<a href="/wrapped" id="wrapped">
-    <img src="/static/images/gift.png" id="wrapIcon" alt="Wrap gift">
 
-    {% if wrap_ready %}
-        <p>Wrap ready!</p>
-    {% else %}
-        <p>Collecting wins...</p>
-    {% endif %}
-</a>
+    <script src="/static/js/index.js"></script>
 
-    
-<script src="/static/js/index.js"></script>
+
 </body>
+
 </html>
