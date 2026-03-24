@@ -521,12 +521,6 @@ def create_group(
     if not user_id:
         return RedirectResponse("/welcome", status_code=303)
 
-    user_id = get_current_user(request)
-
-    if not user_id:
-        return RedirectResponse("/welcome", status_code=303)
-    
-
     group_manager.create_group(
         title,
         color,
@@ -543,14 +537,11 @@ def modify_group(request: Request, groupID: int = 0):
 
     if not user_id:
         return RedirectResponse("/welcome", status_code=303)
-    user_id = get_current_user(request)
-
-    if not user_id:
-        return RedirectResponse("/welcome", status_code=303)
 
     groups = group_manager.get_groups_for_user(user_id)
 
     selected_group = None
+
     if groupID != 0:
         selected_group = group_manager.get_group(groupID)
 
@@ -629,14 +620,11 @@ def modify_task_page(request: Request, taskID: int):
     user_id = get_current_user(request)
     if not user_id:
         return RedirectResponse("/welcome", status_code=303)
-
     task = task_manager.get_task(taskID)
     if not task:
         return HTMLResponse("Task not found", status_code=404)
-
     # Fetch groups for dropdown
     groups = group_manager.get_groups_for_user(user_id)
-
     return templates.TemplateResponse(
         "ModifyTask.html",
         {
