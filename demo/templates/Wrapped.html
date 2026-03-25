@@ -58,9 +58,10 @@
           Complete {{ tasks_needed }} more task{% if tasks_needed != 1 %}s{% endif %} this month to unlock it.
         </p>
 
-        <div class="gift-actions" style="display: flex;">
-          <a href="/" class="sweet-btn dashboard-btn">Return to Dashboard</a>
-        </div>
+        <!-- ✅ FIXED HERE -->
+        <div class="gift-actions" style="display: flex; justify-content: center; align-items: center; width: 100%;">
+<a href="/" class="sweet-btn dashboard-btn" style="display:flex; justify-content:center; align-items:center; text-align:center; flex:0 0 auto; width:260px; margin:0 auto;">Return to Dashboard</a>        </div>
+
       </div>
     </section>
 
@@ -151,15 +152,11 @@
         <div class="summary-content" id="summaryContent"></div>
       </div>
 
-      <div class="card-actions">
-        <button class="sweet-btn replay-btn" onclick="replayWrapped()">
-          Replay Wrap
-        </button>
+      <div class="card-actions summary-actions">
+  <button class="sweet-btn replay-btn">Replay Wrap</button>
 
-        <a href="/" class="sweet-btn dashboard-btn">
-          Return to Dashboard
-        </a>
-      </div>
+  <a href="/" class="sweet-btn dashboard-btn">Return to Dashboard</a>
+</div>
     </section>
 
     {% endif %}

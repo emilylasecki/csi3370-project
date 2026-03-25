@@ -1101,3 +1101,42 @@ body {
     background-color: #3556e3;
     text-decoration: none;
 }
+
+.replay-btn {
+    background-color: #28a745;
+    color: white;
+    border: none;
+}
+
+.replay-btn:hover {
+    background-color: #63cdb3;
+}
+.dashboard-btn {
+    background-color: #4A6CF7;
+    color: white;
+    border: none;
+    text-decoration: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    width: 100%;
+
+}
+
+.dashboard-btn:hover {
+    background-color: #3556e3;
+    text-decoration: none;
+}
+
+.sweet-btn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+.card-actions .sweet-btn {
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}

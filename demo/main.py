@@ -37,6 +37,63 @@ def get_current_user(request: Request):
     return user_id
 
 
+def normalize_task_for_ai(task):
+    due_date = task.get("dueDate")
+
+    if due_date is None:
+        due_date_str = ""
+    else:
+        due_date_str = str(due_date).split("T")[0]
+
+    return {
+        "taskName": task.get("taskName", ""),
+        "description": task.get("description", ""),
+        "status": task.get("status", ""),
+        "priority": task.get("priority", 0),
+        "dueDate": due_date_str,
+        "effortEstimation": task.get("effortEstimation", 0)
+    }
+
+
+def get_all_tasks_for_user(user_id: int):
+    tasks_result = (
+        supabase
+        .table("tasks")
+        .select("*")
+        .eq("userID", user_id)
+        .execute()
+    )
+
+    tasks = tasks_result.data or []
+    return [normalize_task_for_ai(task) for task in tasks]
+
+
+def get_current_month_tasks_for_user(user_id: int):
+    today = date.today()
+    current_month = today.month
+    current_year = today.year
+
+    month_start = datetime(current_year, current_month, 1)
+
+    if current_month == 12:
+        next_month_start = datetime(current_year + 1, 1, 1)
+    else:
+        next_month_start = datetime(current_year, current_month + 1, 1)
+
+    tasks_result = (
+        supabase
+        .table("tasks")
+        .select("*")
+        .eq("userID", user_id)
+        .gte("created_at", month_start.isoformat())
+        .lt("created_at", next_month_start.isoformat())
+        .execute()
+    )
+
+    tasks = tasks_result.data or []
+    return [normalize_task_for_ai(task) for task in tasks]
+
+
 @app.get("/")
 def home(request: Request):
 
@@ -46,31 +103,8 @@ def home(request: Request):
         return RedirectResponse("/welcome", status_code=303)
 
     try:
-        user_id = 1
         min_tasks_required = 5
-
-        today = date.today()
-        current_month = today.month
-        current_year = today.year
-
-        month_start = datetime(current_year, current_month, 1)
-
-        if current_month == 12:
-            next_month_start = datetime(current_year + 1, 1, 1)
-        else:
-            next_month_start = datetime(current_year, current_month + 1, 1)
-
-        tasks_result = (
-            supabase
-            .table("tasks")
-            .select("*")
-            .eq("userID", user_id)
-            .gte("created_at", month_start.isoformat())
-            .lt("created_at", next_month_start.isoformat())
-            .execute()
-        )
-
-        monthly_tasks = tasks_result.data if tasks_result.data else []
+        monthly_tasks = get_current_month_tasks_for_user(user_id)
         wrap_ready = len(monthly_tasks) >= min_tasks_required
 
         return templates.TemplateResponse(
@@ -356,7 +390,7 @@ def get_tasks(request: Request):
     user_id = get_current_user(request)  # Pass request to get session user
 
     if not user_id:
-        user_id = 1  # fallback for testing only
+        return {"error": "Not logged in"}
 
     try:
         # Fetch tasks and include habit and color from task_groups
@@ -400,7 +434,7 @@ async def add_task_json(request: Request):
         "dueDate": data.get("dueDate"),
         "status": data.get("status"),
         "priority": data.get("priority"),
-        "effort": data.get("effortEstimation"),
+        "effortEstimation": data.get("effortEstimation"),
         "userID": user_id
     }
 
@@ -410,47 +444,45 @@ async def add_task_json(request: Request):
 
 
 @app.get("/analyze")
-def analyze():
-    tasks = load_tasks()
-    result = analyze_tasks(tasks)
-    return result
+def analyze(request: Request):
+    user_id = get_current_user(request)
+
+    if not user_id:
+        return {"error": "Not logged in"}
+
+    try:
+        tasks = get_all_tasks_for_user(user_id)
+        result = analyze_tasks(tasks)
+        return result
+    except Exception as e:
+        return {"error": str(e)}
 
 
 @app.get("/wrap")
-def wrap():
-    tasks = load_tasks()
-    result = generate_wrap(tasks)
-    return result
+def wrap(request: Request):
+    user_id = get_current_user(request)
+
+    if not user_id:
+        return {"error": "Not logged in"}
+
+    try:
+        tasks = get_current_month_tasks_for_user(user_id)
+        result = generate_wrap(tasks)
+        return result
+    except Exception as e:
+        return {"error": str(e)}
 
 
 @app.get("/wrapped")
 def wrapped_page(request: Request):
+    user_id = get_current_user(request)
+
+    if not user_id:
+        return RedirectResponse("/welcome", status_code=303)
+
     try:
-        user_id = 1
         min_tasks_required = 5
-
-        today = date.today()
-        current_month = today.month
-        current_year = today.year
-
-        month_start = datetime(current_year, current_month, 1)
-
-        if current_month == 12:
-            next_month_start = datetime(current_year + 1, 1, 1)
-        else:
-            next_month_start = datetime(current_year, current_month + 1, 1)
-
-        tasks_result = (
-            supabase
-            .table("tasks")
-            .select("*")
-            .eq("userID", user_id)
-            .gte("created_at", month_start.isoformat())
-            .lt("created_at", next_month_start.isoformat())
-            .execute()
-        )
-
-        monthly_tasks = tasks_result.data if tasks_result.data else []
+        monthly_tasks = get_current_month_tasks_for_user(user_id)
         task_count = len(monthly_tasks)
 
         if task_count < min_tasks_required:
