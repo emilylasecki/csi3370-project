@@ -383,8 +383,6 @@ def load_tasks():
 
 from fastapi import Request  # make sure Request is imported
 
-from fastapi import Request
-
 @app.get("/tasks")
 def get_tasks(request: Request):
     user_id = get_current_user(request)  # Pass request to get session user
