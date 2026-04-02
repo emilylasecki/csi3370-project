@@ -68,7 +68,6 @@ class TaskManager:
 
         if response.data:
             task = response.data[0]
-            # Fetch group info for convenience
             if task.get("groupID"):
                 group_resp = self.supabase.table("task_groups") \
                     .select("*") \

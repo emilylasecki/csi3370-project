@@ -375,14 +375,6 @@ def add_task_route(
 
     return RedirectResponse(url="/?success=1", status_code=HTTP_303_SEE_OTHER)
 
-
-def load_tasks():
-    with open("app/sample_tasks.json", "r") as file:
-        return json.load(file)
-
-
-from fastapi import Request  # make sure Request is imported
-
 @app.get("/tasks")
 def get_tasks(request: Request):
     user_id = get_current_user(request)  # Pass request to get session user
@@ -414,59 +406,6 @@ def get_tasks(request: Request):
 
         return tasks
 
-    except Exception as e:
-        return {"error": str(e)}
-
-@app.post("/add_task_json")
-async def add_task_json(request: Request):
-    user_id = get_current_user(request)
-
-    if not user_id:
-        return {"error": "Not logged in"}
-
-    data = await request.json()
-
-    task = {
-        "taskName": data.get("taskName"),
-        "description": data.get("description"),
-        "dueDate": data.get("dueDate"),
-        "status": data.get("status"),
-        "priority": data.get("priority"),
-        "effortEstimation": data.get("effortEstimation"),
-        "userID": user_id
-    }
-
-    result = supabase.table("tasks").insert(task).execute()
-
-    return result.data
-
-
-@app.get("/analyze")
-def analyze(request: Request):
-    user_id = get_current_user(request)
-
-    if not user_id:
-        return {"error": "Not logged in"}
-
-    try:
-        tasks = get_all_tasks_for_user(user_id)
-        result = analyze_tasks(tasks)
-        return result
-    except Exception as e:
-        return {"error": str(e)}
-
-
-@app.get("/wrap")
-def wrap(request: Request):
-    user_id = get_current_user(request)
-
-    if not user_id:
-        return {"error": "Not logged in"}
-
-    try:
-        tasks = get_current_month_tasks_for_user(user_id)
-        result = generate_wrap(tasks)
-        return result
     except Exception as e:
         return {"error": str(e)}
 
