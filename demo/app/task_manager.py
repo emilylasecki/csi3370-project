@@ -2,6 +2,7 @@
 from datetime import date
 from app.task import Task
 from supabase import Client
+from datetime import date, datetime  # make sure datetime is imported
 
 class TaskManager:
     def __init__(self, supabase_client: Client):
@@ -119,3 +120,33 @@ class TaskManager:
             .eq("task_id", taskID) \
             .execute()
         return response
+    
+
+# ---------------- Get Current Month Tasks ----------------
+    def get_current_month_tasks_for_user(self, user_id: int):
+        today = date.today()
+        current_month = today.month
+        current_year = today.year
+
+        month_start = datetime(current_year, current_month, 1)
+
+        if current_month == 12:
+            next_month_start = datetime(current_year + 1, 1, 1)
+        else:
+            next_month_start = datetime(current_year, current_month + 1, 1)
+
+        tasks_result = (
+            self.supabase
+            .table("tasks")
+            .select("*")
+            .eq("userID", user_id)
+            .gte("created_at", month_start.isoformat())
+            .lt("created_at", next_month_start.isoformat())
+            .execute()
+        )
+
+        tasks = tasks_result.data or []
+
+        return tasks
+    
+    

@@ -12,10 +12,8 @@ from datetime import datetime, date
 from starlette.middleware.sessions import SessionMiddleware
 import bcrypt
 
-import json
-
-from app.ai_helper import analyze_tasks
 from app.progress_report import generate_wrap
+from app.progress_report import normalize_task_for_ai
 
 app = FastAPI()
 
@@ -37,63 +35,6 @@ def get_current_user(request: Request):
     return user_id
 
 
-def normalize_task_for_ai(task):
-    due_date = task.get("dueDate")
-
-    if due_date is None:
-        due_date_str = ""
-    else:
-        due_date_str = str(due_date).split("T")[0]
-
-    return {
-        "taskName": task.get("taskName", ""),
-        "description": task.get("description", ""),
-        "status": task.get("status", ""),
-        "priority": task.get("priority", 0),
-        "dueDate": due_date_str,
-        "effortEstimation": task.get("effortEstimation", 0)
-    }
-
-
-def get_all_tasks_for_user(user_id: int):
-    tasks_result = (
-        supabase
-        .table("tasks")
-        .select("*")
-        .eq("userID", user_id)
-        .execute()
-    )
-
-    tasks = tasks_result.data or []
-    return [normalize_task_for_ai(task) for task in tasks]
-
-
-def get_current_month_tasks_for_user(user_id: int):
-    today = date.today()
-    current_month = today.month
-    current_year = today.year
-
-    month_start = datetime(current_year, current_month, 1)
-
-    if current_month == 12:
-        next_month_start = datetime(current_year + 1, 1, 1)
-    else:
-        next_month_start = datetime(current_year, current_month + 1, 1)
-
-    tasks_result = (
-        supabase
-        .table("tasks")
-        .select("*")
-        .eq("userID", user_id)
-        .gte("created_at", month_start.isoformat())
-        .lt("created_at", next_month_start.isoformat())
-        .execute()
-    )
-
-    tasks = tasks_result.data or []
-    return [normalize_task_for_ai(task) for task in tasks]
-
-
 @app.get("/")
 def home(request: Request):
 
@@ -104,14 +45,16 @@ def home(request: Request):
 
     try:
         min_tasks_required = 5
-        monthly_tasks = get_current_month_tasks_for_user(user_id)
+        monthly_tasks = task_manager.get_current_month_tasks_for_user(user_id)
+        monthly_tasks = [normalize_task_for_ai(task) for task in monthly_tasks]
         wrap_ready = len(monthly_tasks) >= min_tasks_required
 
         return templates.TemplateResponse(
             "index.html",
             {
                 "request": request,
-                "wrap_ready": wrap_ready
+                "wrap_ready": wrap_ready,
+                "tasks" : monthly_tasks
             }
         )
 
@@ -410,6 +353,7 @@ def get_tasks(request: Request):
         return {"error": str(e)}
 
 
+
 @app.get("/wrapped")
 def wrapped_page(request: Request):
     user_id = get_current_user(request)
@@ -419,7 +363,8 @@ def wrapped_page(request: Request):
 
     try:
         min_tasks_required = 5
-        monthly_tasks = get_current_month_tasks_for_user(user_id)
+        monthly_tasks = task_manager.get_current_month_tasks_for_user(user_id)
+        monthly_tasks = [normalize_task_for_ai(task) for task in monthly_tasks]
         task_count = len(monthly_tasks)
 
         if task_count < min_tasks_required:

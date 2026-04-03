@@ -1,13 +1,22 @@
 from collections import Counter
 from datetime import datetime
 
+def normalize_task_for_ai(task):
+    due_date = task.get("dueDate")
 
-def get_day_name(date_string):
-    try:
-        date_obj = datetime.strptime(date_string, "%Y-%m-%d")
-        return date_obj.strftime("%A")
-    except:
-        return None
+    if due_date is None:
+        due_date_str = ""
+    else:
+        due_date_str = str(due_date).split("T")[0]
+
+    return {
+        "taskName": task.get("taskName", ""),
+        "description": task.get("description", ""),
+        "status": task.get("status", ""),
+        "priority": task.get("priority", 0),
+        "dueDate": due_date_str,
+        "effortEstimation": task.get("effortEstimation", 0)
+    }
 
 
 def normalize_status(status):
