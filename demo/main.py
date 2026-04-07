@@ -35,7 +35,7 @@ def get_current_user(request: Request):
     return user_id
 
 
-@app.get("/")
+@app.route('/', methods=['GET', 'HEAD'])
 def home(request: Request):
 
     user_id = request.session.get("user_id")
