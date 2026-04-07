@@ -15,6 +15,10 @@ body{
     gap: 20px;
     background-color: lightgray;
 }
+div{
+    display: inline-block;
+    align-self: center;
+}
 body h2{
     font-size: 60px;
     font-weight: bold;
