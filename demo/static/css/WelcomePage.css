@@ -61,3 +61,8 @@ input{
     align-self: left;
     margin-top: 100px;
 }
+
+div{
+    display: inline-block;
+    align-self: center;
+}
