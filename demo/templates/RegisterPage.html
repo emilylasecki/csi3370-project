@@ -5,35 +5,37 @@
     <link rel="stylesheet" href="/static/css/RegisterPage.css">
     <title>Register for LittleWins!</title>
 </head>
+
 <body>
 
     <form action="/welcome" method="get">
-    <button type="submit">Back to Login</button>
-        </form>
+        <button type="submit">Back to Login</button>
+    </form>
 
     <h2>Register for LittleWins!</h2>
 
-
-
     {% if error %}
-    <p style="color:red;">{{ error }}</p>
+        <p style="color:red;">{{ error }}</p>
     {% endif %}
     <div>
-    <form action="/register" method="POST">
-    <label for="new-username">Create Username:</label>
-    <input id="new-username" name="Username" type="text" required>
+        <form action="/register" method="POST">
+        <label for="new-username">Create Username:</label>
+        <input id="new-username" name="Username" type="text" required>
     </div>
+
     <div>
-    <label for="email">Email:</label>
-    <input id="email" name="Email" type="email" required>
+        <label for="email">Email:</label>
+        <input id="email" name="Email" type="email" required>
     </div>
+
     <div>
-    <label for="Question">What city were you born in?</label>
-    <input id="Question" name="Question" type="text" required>
+        <label for="Question">What city were you born in?</label>
+        <input id="Question" name="Question" type="text" required>
     </div>
+
     <div>
-    <label for="password">Create Password:</label>
-    <input id="password" name="entry_password" type="password" required>
+        <label for="password">Create Password:</label>
+        <input id="password" name="entry_password" type="password" required>
     </div>
 
     <a href="welcome"><button id="register-submit" type="submit">Sign up</button></a>
