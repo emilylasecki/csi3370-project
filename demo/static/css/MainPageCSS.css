@@ -140,12 +140,16 @@ dd button {
     min-width: 120px; /* adjust width */
 }
 
-/* WRAPPED */
+/* Wrapped formatting*/
 #wrapped {
     position: absolute;
     bottom: -30px;
     right: -120px;
     width: auto;
+}
+
+#wrapped.collecting{
+    right: -150px;
 }
  
 #wrappedIcon{

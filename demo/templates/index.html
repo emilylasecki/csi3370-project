@@ -78,7 +78,7 @@
             </a>
         </div>
 
-        <div id="wrapped">
+        <div id="wrapped" {% if not wrap_ready %} class="collecting" {% endif %}>
             <a href="/wrapped" id="wrappedLink">
                 <img src="/static/images/gift.png" id="wrappedIcon" alt="Wrap gift">
 
@@ -87,6 +87,7 @@
                 {% else %}
                     <p>Collecting wins...</p>
                 {% endif %}
+
             </a>
         </div>
 
