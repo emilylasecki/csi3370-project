@@ -1,9 +1,0 @@
-fastapi==0.135.1
-uvicorn
-jinja2
-flask
-supabase
-dotenv
-python-multipart
-flask-cors
-bcrypt
